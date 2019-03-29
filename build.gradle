@@ -5,12 +5,35 @@ plugins {
 group 'me.fru1t'
 version '0.1-dev'
 
+apply plugin: 'kotlin-kapt'
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation 'com.google.dagger:dagger:2.21'
+    kapt 'com.google.dagger:dagger-compiler:2.21'
+
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testImplementation "com.google.truth:truth:0.43"
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
+test {
+    useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show results
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 compileKotlin {
