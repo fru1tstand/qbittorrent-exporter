@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.qbt.data.maindata
+package me.fru1t.qbtexporter.qbt.response.maindata
 
 import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Since

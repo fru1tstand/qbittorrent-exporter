@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.qbt.data.maindata.torrents
+package me.fru1t.qbtexporter.qbt.response.maindata.torrents
 
 import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Since
@@ -25,7 +25,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("added_on")
-  val dateAddedUnixTimestamp: Int?,
+  val dateAddedUnixTimestamp: Long?,
 
   /**
    * The unix timestamp (seconds since unix epoch) this torrent was completed (that is, all pieces
@@ -36,7 +36,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("completion_on")
-  val dateCompletedUnixTimestamp: Int?,
+  val dateCompletedUnixTimestamp: Long?,
 
   /** The amount of bytes remaining, to download. */
   @Since(QbtVersion.RELEASE_4_1_5)
@@ -133,7 +133,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("last_activity")
-  val dateSinceLastActivityUnixTimestamp: Int?,
+  val dateSinceLastActivityUnixTimestamp: Long?,
 
   /** The magnet uri for this torrent. */
   @Since(QbtVersion.RELEASE_4_1_5)
@@ -241,7 +241,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("seen_complete")
-  val lastSeenCompleteUnixTimestamp: Int?,
+  val lastSeenCompleteUnixTimestamp: Long?,
 
   /**
    * Whether or not "sequential download" is enabled. Sequential download is a mode in libtorrent
