@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.settings
 
+import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation
 
 /**
@@ -20,6 +21,6 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
  *   settings).
  */
 data class Settings(
-  @Documentation("test")
-  var placeholder: String? = "placeholder"
+  @Documentation("Settings specific to qBittorrent.")
+  var qbtSettings: QbtSettings? = QbtSettings()
 )
