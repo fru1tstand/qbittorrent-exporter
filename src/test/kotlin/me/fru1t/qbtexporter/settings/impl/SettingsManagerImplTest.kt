@@ -17,7 +17,6 @@ internal class SettingsManagerImplTest {
     private val EXAMPLE_SETTINGS_FILE = File(SettingsManagerImpl.EXAMPLE_SETTINGS_FILE_LOCATION)
   }
 
-
   private lateinit var gson: Gson
   private lateinit var manager: SettingsManagerImpl
 

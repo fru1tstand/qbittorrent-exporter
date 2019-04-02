@@ -137,7 +137,10 @@ internal class SettingsTest {
     "${settingsClass.qualifiedName}#${parameter.name}"
 
   private fun assertKTypeIsNonNull(
-      settingsClass: KClass<*>, parameter: KParameter, kType: KType?): KType {
+    settingsClass: KClass<*>,
+    parameter: KParameter,
+    kType: KType?
+  ): KType {
     if (kType == null) {
       assertWithMessage(
           "Settings must be strongly typed for serialization/deserialization, and thus generics " +
@@ -153,23 +156,26 @@ internal class SettingsTest {
    * all sub-settings.
    */
   private fun forEachSettingType(
-      test: (settingsClass: KClass<*>, parameter: KParameter, type: KType) -> Unit) {
-    forEachSettingsClassParameterRecursive(Settings::class, Stack()) {
-      settingsClass: KClass<*>, parameter: KParameter ->
+    test: (settingsClass: KClass<*>, parameter: KParameter, type: KType) -> Unit
+  ) {
+    forEachSettingsClassParameterRecursive(
+        Settings::class,
+        Stack()) { settingsClass: KClass<*>, parameter: KParameter ->
       forEachSettingTypeRecursive(
           assertKTypeIsNonNull(settingsClass, parameter, parameter.type),
           settingsClass,
-          parameter) {
-        type: KType -> test(settingsClass, parameter, type)
+          parameter) { type: KType ->
+        test(settingsClass, parameter, type)
       }
     }
   }
 
   private fun forEachSettingTypeRecursive(
-      rootKType: KType,
-      settingsClass: KClass<*>,
-      parameter: KParameter,
-      test: (type: KType) -> Unit) {
+    rootKType: KType,
+    settingsClass: KClass<*>,
+    parameter: KParameter,
+    test: (type: KType) -> Unit
+  ) {
     // Test the parameter itself
     test(rootKType)
 
@@ -185,7 +191,8 @@ internal class SettingsTest {
 
   /** Runs [test] against all parameters inside [Settings] and all sub-settings. */
   private fun forEachSettingsClassParameter(
-      test: (settingsClass: KClass<*>, parameter: KParameter) -> Unit) {
+    test: (settingsClass: KClass<*>, parameter: KParameter) -> Unit
+  ) {
     forEachSettingsClassParameterRecursive(Settings::class, Stack(), test)
   }
 
@@ -194,9 +201,10 @@ internal class SettingsTest {
    * sub-settings.
    */
   private fun forEachSettingsClassParameterRecursive(
-      rootSettingsClass: KClass<*>,
-      visitedSettings: Stack<KClass<*>>,
-      test: (settingsClass: KClass<*>, parameter: KParameter) -> Unit) {
+    rootSettingsClass: KClass<*>,
+    visitedSettings: Stack<KClass<*>>,
+    test: (settingsClass: KClass<*>, parameter: KParameter) -> Unit
+  ) {
     // Stop circular dependencies
     if (visitedSettings.contains(rootSettingsClass)) {
       visitedSettings.push(rootSettingsClass)
