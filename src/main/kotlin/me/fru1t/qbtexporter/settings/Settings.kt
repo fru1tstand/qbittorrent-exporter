@@ -4,7 +4,7 @@ import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation
 
 /**
- * Settings for the qBittorrentExporter.
+ * Settings for the qBittorrentExporter. Fetch the instance of Settings through [SettingsManager].
  *
  * Settings must follow the following rules:
  * + No individual settings should exist in the root [Settings] object. Instead, create a

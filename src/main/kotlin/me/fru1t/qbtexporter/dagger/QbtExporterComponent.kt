@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 /** Starts the dependency graph for QbtExporter. */
 @Singleton
-@Component(modules = [QbtExporterModule::class])
+@Component(modules = [QbtExporterModule::class, QbtExporterInterfacesModule::class])
 interface QbtExporterComponent {
   fun inject(qbtExporter: QbtExporter)
 }
