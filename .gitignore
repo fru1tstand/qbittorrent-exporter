@@ -3,3 +3,5 @@
 build/
 out/
 testdata.json
+qbt-exporter-settings.json
+test/
