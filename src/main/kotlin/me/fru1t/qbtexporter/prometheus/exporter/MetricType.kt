@@ -1,10 +1,10 @@
-package me.fru1t.qbtexporter.prometheus
+package me.fru1t.qbtexporter.prometheus.exporter
 
 /**
  * The various types of metrics that prometheus accepts. See
  * [official documentation](https://prometheus.io/docs/concepts/metric_types/).
  */
-enum class PrometheusMetricType {
+enum class MetricType {
   /**
    * A cumulative metrics that represents a single monotonically increasing counter whose value can
    * only increase or be reset to zero on restart. For example, you can use a counter to represent
