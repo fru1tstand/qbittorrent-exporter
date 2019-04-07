@@ -46,7 +46,7 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testImplementation("com.google.truth:truth:$truthVersion")
-    testImplementation(ktor("client-mock"))
+    testImplementation(ktor("client-mock-jvm"))
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 }
