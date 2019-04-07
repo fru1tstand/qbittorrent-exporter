@@ -4,10 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.settings.Settings
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import java.io.File
 
@@ -19,12 +21,13 @@ internal class SettingsManagerImplTest {
 
   private lateinit var gson: Gson
   private lateinit var manager: SettingsManagerImpl
+  @Mock private lateinit var mockLogger: Logger
 
   @BeforeEach
   fun setUp() {
     MockitoAnnotations.initMocks(this)
     gson = Gson()
-    manager = SettingsManagerImpl(gson)
+    manager = SettingsManagerImpl(gson, mockLogger)
   }
 
   @AfterEach

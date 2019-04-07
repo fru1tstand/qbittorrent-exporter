@@ -2,6 +2,7 @@ package me.fru1t.qbtexporter.settings.impl
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
 import java.io.File
@@ -10,7 +11,8 @@ import java.lang.RuntimeException
 import javax.inject.Inject
 
 /** Default implementation of [SettingsManager]. */
-class SettingsManagerImpl @Inject constructor(private val gson: Gson) : SettingsManager {
+class SettingsManagerImpl @Inject constructor(private val gson: Gson, private val logger: Logger) :
+  SettingsManager {
   internal companion object {
     internal const val DEFAULT_SETTINGS_FILE_LOCATION: String = "qbt-exporter-settings.json"
     internal const val EXAMPLE_SETTINGS_FILE_LOCATION: String = "example-qbt-exporter-settings.json"
@@ -32,11 +34,11 @@ class SettingsManagerImpl @Inject constructor(private val gson: Gson) : Settings
   override fun get(): Settings {
     if (settings == null) {
       if (!SETTINGS_FILE.exists()) {
-        println("No settings file found, creating one.")
+        logger.i("No settings file found, creating one.")
         settings = Settings()
         save()
       } else {
-        println("Settings found, loading from $DEFAULT_SETTINGS_FILE_LOCATION")
+        logger.i("Settings found, loading from $DEFAULT_SETTINGS_FILE_LOCATION")
         loadSettingsFromFile()
       }
     }
@@ -47,15 +49,16 @@ class SettingsManagerImpl @Inject constructor(private val gson: Gson) : Settings
   private fun loadSettingsFromFile() {
     if (!SETTINGS_FILE.canRead() && !SETTINGS_FILE.canWrite()) {
       throw RuntimeException(
-          "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work.")
+        "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
+      )
     }
 
     try {
       settings = gson.fromJson(SETTINGS_FILE.reader(), Settings::class.java)
     } catch (e: JsonSyntaxException) {
-      println("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
+      logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
       writeExampleSettings()
-      println("But I'm still gonna crash so you can figure out the issue.")
+      logger.i("But I'm still gonna crash so you can figure out the issue.")
       throw e
     }
   }
@@ -64,17 +67,18 @@ class SettingsManagerImpl @Inject constructor(private val gson: Gson) : Settings
   private fun writeExampleSettings() {
     val exampleSettingsFile = File(EXAMPLE_SETTINGS_FILE_LOCATION)
     if (!exampleSettingsFile.canWrite()) {
-      println(
-          "I can't even write an example settings file for you as I don't have write permissions " +
-              "to $EXAMPLE_SETTINGS_FILE_LOCATION.")
+      logger.i(
+        "I can't even write an example settings file for you as I don't have write permissions " +
+            "to $EXAMPLE_SETTINGS_FILE_LOCATION."
+      )
     }
 
-    println("Trying to write an example settings file at $EXAMPLE_SETTINGS_FILE_LOCATION.")
+    logger.i("Trying to write an example settings file at $EXAMPLE_SETTINGS_FILE_LOCATION.")
     try {
       exampleSettingsFile.writeText(gson.toJson(Settings()))
-      println("Success!")
+      logger.i("Success!")
     } catch (e: IOException) {
-      println("Nevermind. Something bad happened while writing the example settings:")
+      logger.e("Nevermind. Something bad happened while writing the example settings:")
       throw e
     }
   }
