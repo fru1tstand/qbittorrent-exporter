@@ -15,8 +15,11 @@ import java.io.File
 
 internal class SettingsManagerImplTest {
   private companion object {
-    private val SETTINGS_FILE = File(SettingsManagerImpl.DEFAULT_SETTINGS_FILE_LOCATION)
-    private val EXAMPLE_SETTINGS_FILE = File(SettingsManagerImpl.EXAMPLE_SETTINGS_FILE_LOCATION)
+    private const val TESTING_DIRECTORY = "test-out/"
+    private val SETTINGS_FILE =
+      File(TESTING_DIRECTORY + SettingsManagerImpl.DEFAULT_SETTINGS_FILE_LOCATION)
+    private val EXAMPLE_SETTINGS_FILE =
+      File(TESTING_DIRECTORY + SettingsManagerImpl.EXAMPLE_SETTINGS_FILE_LOCATION)
   }
 
   private lateinit var gson: Gson
@@ -27,13 +30,15 @@ internal class SettingsManagerImplTest {
   fun setUp() {
     MockitoAnnotations.initMocks(this)
     gson = Gson()
-    manager = SettingsManagerImpl(gson, mockLogger)
+    manager =
+      SettingsManagerImpl(gson = gson, logger = mockLogger, settingsFilePath = TESTING_DIRECTORY)
   }
 
   @AfterEach
   fun tearDown() {
     SETTINGS_FILE.delete()
     EXAMPLE_SETTINGS_FILE.delete()
+    File(TESTING_DIRECTORY).deleteRecursively()
   }
 
   @Test

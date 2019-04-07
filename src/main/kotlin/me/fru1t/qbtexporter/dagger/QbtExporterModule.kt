@@ -7,6 +7,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.logger.impl.ConsoleLogger
+import me.fru1t.qbtexporter.settings.impl.SettingsManagerImpl
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -15,15 +17,19 @@ import javax.inject.Singleton
  */
 @Module
 class QbtExporterModule {
-  @Singleton
   @Provides
+  @Singleton
   fun provideGson(): Gson = GsonBuilder().setPrettyPrinting().create()
 
-  @Singleton
   @Provides
+  @Singleton
   fun provideHttpClient(): HttpClient = HttpClient(Apache)
 
-  @Singleton
   @Provides
+  @Singleton
   fun provideLogger(): Logger = ConsoleLogger(ConsoleLogger.LOG_LEVEL_INFO)
+
+  @Provides
+  @Named(SettingsManagerImpl.NAMED_FILE_PATH)
+  fun provideSettingsManagerImplFilePath(): String = ""
 }
