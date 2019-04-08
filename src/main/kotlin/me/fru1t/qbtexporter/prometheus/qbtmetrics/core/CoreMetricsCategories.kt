@@ -1,7 +1,7 @@
-package me.fru1t.qbtexporter.settings
+package me.fru1t.qbtexporter.prometheus.qbtmetrics.core
 
-/** A natural grouping of metrics to group by in the settings file. */
-enum class SettingsCategory {
+/** The groups for core metrics. */
+enum class CoreMetricsCategories {
   /**
    * Raw metrics exposed by the `server_state` object from the web ui. These metrics are similar to
    * that of the aggregate metrics; however, server-reported metrics persist data from deleted
@@ -9,14 +9,6 @@ enum class SettingsCategory {
    * total bytes downloaded.
    */
   SERVER,
-
-  /**
-   * Metrics calculated by aggregating torrents. These metrics are similar to that of the server
-   * metrics; however, aggregate metrics can only report non-deleted torrents from qBittorrent.
-   * Examples of aggregate metrics include number of active torrents, current upload rate, and
-   * current download rate.
-   */
-  AGGREGATE,
 
   /**
    * Raw metrics from individual torrents. For example, seed ratio for a specific torrent, torrent

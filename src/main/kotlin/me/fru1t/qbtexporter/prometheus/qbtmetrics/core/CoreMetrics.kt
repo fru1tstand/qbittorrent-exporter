@@ -1,16 +1,15 @@
-package me.fru1t.qbtexporter.prometheus.qbt
+package me.fru1t.qbtexporter.prometheus.qbtmetrics.core
 
 import me.fru1t.qbtexporter.prometheus.exporter.MetricType
-import me.fru1t.qbtexporter.settings.SettingsCategory
 
 /** Exposed values from the qBittorrent web ui. */
-enum class Metrics(
-  val settingsCategory: SettingsCategory,
+enum class CoreMetrics(
+  val settingsCategory: CoreMetricsCategories,
   val metricType: MetricType,
   val prometheusHelpString: String
 ) {
   ALL_TIME_DOWNLOAD_BYTES(
-    SettingsCategory.SERVER,
+    CoreMetricsCategories.SERVER,
     MetricType.COUNTER,
     "The total number of downloaded bytes from all torrents (including deleted ones)."
   )
