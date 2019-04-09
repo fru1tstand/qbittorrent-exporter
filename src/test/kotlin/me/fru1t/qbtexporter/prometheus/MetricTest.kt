@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.prometheus.exporter
+package me.fru1t.qbtexporter.prometheus
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
@@ -18,7 +18,7 @@ internal class MetricTest {
         name = TEST_METRIC_NAME,
         help = TEST_METRIC_HELP,
         type = TEST_METRIC_TYPE,
-        isInteger = false
+        isWholeNumber = false
       ) {
         override fun getAllInternalMetrics(): String =
           createInternalMetric(TEST_METRIC_NAME, 31415.92)
@@ -38,7 +38,7 @@ internal class MetricTest {
         name = TEST_METRIC_NAME,
         help = TEST_METRIC_HELP,
         type = TEST_METRIC_TYPE,
-        isInteger = true
+        isWholeNumber = true
       ) {
         override fun getAllInternalMetrics(): String =
           createInternalMetric(TEST_METRIC_NAME, 3.14)

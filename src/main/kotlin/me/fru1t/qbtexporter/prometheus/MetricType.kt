@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.prometheus.exporter
+package me.fru1t.qbtexporter.prometheus
 
 /**
  * The various types of metrics that prometheus accepts. See

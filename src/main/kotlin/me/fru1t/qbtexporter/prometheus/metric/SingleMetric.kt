@@ -1,7 +1,7 @@
-package me.fru1t.qbtexporter.prometheus.exporter.metric
+package me.fru1t.qbtexporter.prometheus.metric
 
-import me.fru1t.qbtexporter.prometheus.exporter.Metric
-import me.fru1t.qbtexporter.prometheus.exporter.MetricType
+import me.fru1t.qbtexporter.prometheus.Metric
+import me.fru1t.qbtexporter.prometheus.MetricType
 
 /**
  * Implementation of [Metric] that represents a single-valued metric in prometheus.
@@ -21,7 +21,7 @@ class SingleMetric(
   name: String,
   help: String,
   type: MetricType,
-  isInteger: Boolean = false
-) : Metric(name, help, type, isInteger) {
+  isWholeNumber: Boolean = false
+) : Metric(name, help, type, isWholeNumber) {
   override fun getAllInternalMetrics(): String = createInternalMetric(name, value)
 }

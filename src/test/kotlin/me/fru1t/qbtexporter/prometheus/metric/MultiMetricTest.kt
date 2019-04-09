@@ -1,8 +1,8 @@
-package me.fru1t.qbtexporter.prometheus.exporter.metric
+package me.fru1t.qbtexporter.prometheus.metric
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import me.fru1t.qbtexporter.prometheus.exporter.MetricType
+import me.fru1t.qbtexporter.prometheus.MetricType
 import org.junit.jupiter.api.Test
 
 internal class MultiMetricTest {

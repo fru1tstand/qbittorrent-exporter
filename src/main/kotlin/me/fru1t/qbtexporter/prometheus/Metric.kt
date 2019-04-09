@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.prometheus.exporter
+package me.fru1t.qbtexporter.prometheus
 
 import java.util.regex.Pattern
 
@@ -6,14 +6,14 @@ import java.util.regex.Pattern
  * Produces prometheus-consumable output.
  *
  * @constructor creates a metric with a [name] that must conform to
- * [prometheus documentation](https://prometheus.io/docs/instrumenting/writing_exporters/#naming),
+ * [prometheus documentation],
  * with [help] and a given [type].
  */
 abstract class Metric(
   val name: String,
   val help: String,
   val type: MetricType,
-  val isInteger: Boolean = false
+  val isWholeNumber: Boolean = false
 ) {
   private companion object {
     private const val HELP_TEMPLATE = "# HELP %s %s"
@@ -49,6 +49,6 @@ abstract class Metric(
 
   /** Returns a properly formatted internal metric line with the given [name] and [value]. */
   protected fun createInternalMetric(name: String, value: Double) =
-    if (isInteger) METRIC_OUTPUT_INTEGER_TEMPLATE.format(name, value.toInt())
+    if (isWholeNumber) METRIC_OUTPUT_INTEGER_TEMPLATE.format(name, value.toInt())
     else METRIC_OUTPUT_DOUBLE_TEMPLATE.format(name, value)
 }

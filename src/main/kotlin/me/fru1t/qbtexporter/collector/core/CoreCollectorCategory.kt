@@ -1,7 +1,7 @@
-package me.fru1t.qbtexporter.prometheus.qbtmetrics.core
+package me.fru1t.qbtexporter.collector.core
 
 /** The groups for core metrics. */
-enum class CoreMetricsCategories {
+enum class CoreCollectorCategory {
   /**
    * Raw metrics exposed by the `server_state` object from the web ui. These metrics are similar to
    * that of the aggregate metrics; however, server-reported metrics persist data from deleted
