@@ -7,7 +7,7 @@ import me.fru1t.qbtexporter.qbt.response.Maindata
  * Qbt classes that are able to transform into a prometheus-readable metric available in this
  * exporter.
  */
-interface QbtMetricable {
+interface Collectible {
   /**
    * Returns the metric name which must conform to
    * [prometheus naming convention](https://prometheus.io/docs/instrumenting/writing_exporters/#naming).
@@ -24,7 +24,7 @@ interface QbtMetricable {
   fun getMetricType(): MetricType
 
   /**
-   * Returns the key-value pair(s) portion of the metric.
+   * Returns the key-value pair(s) portion of the metric given the [maindata] object.
    *
    * For example:
    * ```

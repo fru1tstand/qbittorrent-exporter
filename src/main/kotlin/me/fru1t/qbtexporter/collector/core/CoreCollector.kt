@@ -2,7 +2,7 @@ package me.fru1t.qbtexporter.collector.core
 
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
-import me.fru1t.qbtexporter.collector.QbtMetricable
+import me.fru1t.qbtexporter.collector.Collectible
 import me.fru1t.qbtexporter.prometheus.metric.SingleMetric
 import me.fru1t.qbtexporter.qbt.response.Maindata
 
@@ -12,7 +12,7 @@ enum class CoreCollector(
   val type: MetricType,
   val help: String,
   val collect: (Maindata) -> Metric
-) : QbtMetricable {
+) : Collectible {
   ALL_TIME_DOWNLOAD_BYTES(
     CoreCollectorCategory.SERVER,
     MetricType.COUNTER,
