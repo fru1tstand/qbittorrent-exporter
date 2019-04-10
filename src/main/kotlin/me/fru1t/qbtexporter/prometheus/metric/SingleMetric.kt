@@ -4,7 +4,9 @@ import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 
 /**
- * Implementation of [Metric] that represents a single-valued metric in prometheus.
+ * Implementation of [Metric] that represents a single-valued metric in prometheus. Note that this
+ * metric is re-usable such that a collector may create an instance of it, and set its value
+ * multiple times.
  *
  * For example
  * ```
@@ -17,11 +19,10 @@ import me.fru1t.qbtexporter.prometheus.MetricType
  * additional parameter details.
  */
 class SingleMetric(
-  val value: Double,
+  var value: Number?,
   name: String,
   help: String,
-  type: MetricType,
-  isWholeNumber: Boolean = false
-) : Metric(name, help, type, isWholeNumber) {
+  type: MetricType
+) : Metric(name, help, type) {
   override fun getAllInternalMetrics(): String = createInternalMetric(name, value)
 }

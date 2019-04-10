@@ -12,21 +12,24 @@ import java.util.regex.Pattern
 abstract class Metric(
   val name: String,
   val help: String,
-  val type: MetricType,
-  val isWholeNumber: Boolean = false
+  val type: MetricType
 ) {
-  private companion object {
+  protected companion object {
     private const val HELP_TEMPLATE = "# HELP %s %s"
     private const val TYPE_TEMPLATE = "# TYPE %s %s"
-    private const val METRIC_OUTPUT_DOUBLE_TEMPLATE = "%s %e"
-    private const val METRIC_OUTPUT_INTEGER_TEMPLATE = "%s %d"
 
     private val NAMING_REGEX = Pattern.compile("[a-zA-Z0-9:_]+")!!
+
+    /**
+     * Returns a properly formatted internal metric line with the given [name] and [value], coercing
+     * [value] to 0 if passed `null`.
+     */
+    fun createInternalMetric(name: String, value: Number?): String = "$name ${value ?: 0}"
   }
 
   init {
     // Validate name
-    if (!isValidName(name)) {
+    if (!isValidIdentifier(name)) {
       throw IllegalArgumentException(
         "Illegal metric name '$name'. Must conform to regex ${NAMING_REGEX.pattern()}"
       )
@@ -45,10 +48,5 @@ abstract class Metric(
       getAllInternalMetrics()
 
   /** Returns whether or not [name] is a valid prometheus metric name or label. */
-  protected fun isValidName(name: String) = NAMING_REGEX.matcher(name).matches()
-
-  /** Returns a properly formatted internal metric line with the given [name] and [value]. */
-  protected fun createInternalMetric(name: String, value: Double) =
-    if (isWholeNumber) METRIC_OUTPUT_INTEGER_TEMPLATE.format(name, value.toInt())
-    else METRIC_OUTPUT_DOUBLE_TEMPLATE.format(name, value)
+  protected fun isValidIdentifier(name: String) = NAMING_REGEX.matcher(name).matches()
 }

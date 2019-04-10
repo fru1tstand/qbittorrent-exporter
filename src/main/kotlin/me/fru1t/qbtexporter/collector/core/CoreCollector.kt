@@ -2,7 +2,6 @@ package me.fru1t.qbtexporter.collector.core
 
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
-import me.fru1t.qbtexporter.collector.Collectible
 import me.fru1t.qbtexporter.prometheus.metric.SingleMetric
 import me.fru1t.qbtexporter.qbt.response.Maindata
 
@@ -12,7 +11,7 @@ enum class CoreCollector(
   val type: MetricType,
   val help: String,
   val collect: (Maindata) -> Metric
-) : Collectible {
+) {
   ALL_TIME_DOWNLOAD_BYTES(
     CoreCollectorCategory.SERVER,
     MetricType.COUNTER,
@@ -46,7 +45,6 @@ enum class CoreCollector(
     private fun singleMetricOf(coreCollector: CoreCollector, value: Long?) =
       singleMetricOf(
         coreCollector = coreCollector,
-        isWholeNumber = true,
         value = value?.toDouble()
       )
 
@@ -54,15 +52,13 @@ enum class CoreCollector(
     private fun singleMetricOf(coreCollector: CoreCollector, value: Int?) =
       singleMetricOf(
         coreCollector = coreCollector,
-        isWholeNumber = true,
         value = value?.toDouble()
       )
 
     /** [singleMetricOf] Boolean values coercing true to `1.0` and false to `0.0`. */
-    private fun singleMetricOf(coreCollector: CoreCollector, isInteger: Boolean, value: Boolean?) =
+    private fun singleMetricOf(coreCollector: CoreCollector, value: Boolean?) =
       singleMetricOf(
         coreCollector,
-        isInteger,
         if (value == true) 1.0 else 0.0
       )
 
@@ -72,23 +68,13 @@ enum class CoreCollector(
      */
     private fun singleMetricOf(
       coreCollector: CoreCollector,
-      isWholeNumber: Boolean,
       value: Double?
     ): SingleMetric =
       SingleMetric(
         value = value ?: 0.0,
         name = coreCollector.name.toLowerCase(),
         help = coreCollector.help,
-        type = coreCollector.type,
-        isWholeNumber = isWholeNumber
+        type = coreCollector.type
       )
   }
-
-  override fun getName(): String = name.toLowerCase()
-
-  override fun getMetricHelp(): String = help
-
-  override fun getMetricType(): MetricType = type
-
-  override fun getMetric(maindata: Maindata): String = TODO()
 }

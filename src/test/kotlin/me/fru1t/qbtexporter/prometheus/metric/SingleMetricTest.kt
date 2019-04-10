@@ -24,7 +24,7 @@ internal class SingleMetricTest {
     assertThat(singleMetric.toString()).isEqualTo(
       "# HELP $TEST_NAME $TEST_HELP\n" +
           "# TYPE $TEST_NAME ${TEST_METRIC_TYPE.name.toLowerCase()}\n" +
-          "$TEST_NAME 3.141592e+04"
+          "$TEST_NAME ${singleMetric.value}"
     )
   }
 }

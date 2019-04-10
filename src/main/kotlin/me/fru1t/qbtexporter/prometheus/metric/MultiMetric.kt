@@ -5,7 +5,8 @@ import me.fru1t.qbtexporter.prometheus.MetricType
 
 /**
  * Implementation of [Metric] that represents multiple-valued metrics, identified by labels, in
- * prometheus.
+ * prometheus. Note that this metric is re-usable such that a collector may create an instance of
+ * it, and set its value multiple times.
  *
  * For example
  * ```
@@ -21,12 +22,11 @@ import me.fru1t.qbtexporter.prometheus.MetricType
  * additional parameter details.
  */
 class MultiMetric(
-  val metrics: Map<Map<String, String>, Double>,
+  var metrics: Map<Map<String, String>, Number>,
   name: String,
   help: String,
-  type: MetricType,
-  isInteger: Boolean = false
-) : Metric(name, help, type, isInteger) {
+  type: MetricType
+) : Metric(name, help, type) {
   private companion object {
     private const val NAME_WITH_LABELS_TEMPLATE = "%s{%s}"
     private const val LABEL_TEMPLATE = "%s=\"%s\""
@@ -38,7 +38,7 @@ class MultiMetric(
     // Validate all labels
     metrics.keys.forEach { labels ->
       labels.forEach { labelName, labelValue ->
-        if (!isValidName(labelName)) {
+        if (!isValidIdentifier(labelName)) {
           throw IllegalArgumentException(
             "Illegal metric label '$labelName' (with value '$labelValue') in metric '$name'"
           )

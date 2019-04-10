@@ -12,43 +12,39 @@ internal class MetricTest {
   }
 
   @Test
-  fun toString_double() {
-    val metric =
-      object : Metric(
-        name = TEST_METRIC_NAME,
-        help = TEST_METRIC_HELP,
-        type = TEST_METRIC_TYPE,
-        isWholeNumber = false
-      ) {
-        override fun getAllInternalMetrics(): String =
-          createInternalMetric(TEST_METRIC_NAME, 31415.92)
-      }
-
-    assertThat(metric.toString()).isEqualTo(
-      "# HELP $TEST_METRIC_NAME $TEST_METRIC_HELP\n" +
-          "# TYPE $TEST_METRIC_NAME ${TEST_METRIC_TYPE.name.toLowerCase()}\n" +
-          "$TEST_METRIC_NAME 3.141592e+04"
-    )
+  fun toString_byte() {
+    val value: Byte = 3
+    assertToString(value, "3")
   }
 
   @Test
-  fun toString_integer() {
-    val metric =
-      object : Metric(
-        name = TEST_METRIC_NAME,
-        help = TEST_METRIC_HELP,
-        type = TEST_METRIC_TYPE,
-        isWholeNumber = true
-      ) {
-        override fun getAllInternalMetrics(): String =
-          createInternalMetric(TEST_METRIC_NAME, 3.14)
-      }
+  fun toString_short() {
+    val value: Short = 7
+    assertToString(value, "7")
+  }
 
-    assertThat(metric.toString()).isEqualTo(
-      "# HELP $TEST_METRIC_NAME $TEST_METRIC_HELP\n" +
-          "# TYPE $TEST_METRIC_NAME ${TEST_METRIC_TYPE.name.toLowerCase()}\n" +
-          "$TEST_METRIC_NAME 3"
-    )
+  @Test
+  fun toString_int() {
+    val value: Int? = 400
+    assertToString(value, "400")
+  }
+
+  @Test
+  fun toString_long() {
+    val value: Long = 173
+    assertToString(value, "173")
+  }
+
+  @Test
+  fun toString_float() {
+    val value: Float? = 3.14F
+    assertToString(value, "3.14")
+  }
+
+  @Test
+  fun toString_double() {
+    val value: Double? = 3.1415
+    assertToString(value, "3.1415")
   }
 
   @Test
@@ -62,5 +58,24 @@ internal class MetricTest {
       // Expected
       assertThat(e).hasMessageThat().contains("invalid name")
     }
+  }
+
+  /** Creates a new metric and tests its output against the expected metric value. */
+  private fun assertToString(value: Number?, expectedValue: String) {
+    val metric =
+      object : Metric(
+        name = TEST_METRIC_NAME,
+        help = TEST_METRIC_HELP,
+        type = TEST_METRIC_TYPE
+      ) {
+        override fun getAllInternalMetrics(): String =
+          createInternalMetric(TEST_METRIC_NAME, value)
+      }
+
+    assertThat(metric.toString()).isEqualTo(
+      "# HELP $TEST_METRIC_NAME $TEST_METRIC_HELP\n" +
+          "# TYPE $TEST_METRIC_NAME ${TEST_METRIC_TYPE.name.toLowerCase()}\n" +
+          "$TEST_METRIC_NAME $expectedValue"
+    )
   }
 }

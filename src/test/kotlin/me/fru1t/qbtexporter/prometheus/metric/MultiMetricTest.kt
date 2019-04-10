@@ -9,20 +9,19 @@ internal class MultiMetricTest {
   private companion object {
     private const val TEST_METRIC_NAME = "this_is_a_test_name"
     private const val TEST_METRIC_HELP = "Example test for help."
-    private const val TEST_IS_INTEGER = true
     private val TEST_METRIC_TYPE = MetricType.COUNTER
   }
 
   @Test
   fun testToString() {
-    val metrics = mapOf(
+    val metrics = mapOf<Map<String, String>, Number>(
       Pair(
         mapOf(Pair("foo", "fooValue1"), Pair("bar", "barValue1")),
         1.0
       ),
       Pair(
         mapOf(Pair("foo", "fooValue2"), Pair("bar", "barValue2")),
-        2.0
+        2
       ),
       Pair(
         mapOf(Pair("baz", "bazValue3")),
@@ -35,16 +34,15 @@ internal class MultiMetricTest {
         metrics = metrics,
         name = TEST_METRIC_NAME,
         help = TEST_METRIC_HELP,
-        type = TEST_METRIC_TYPE,
-        isInteger = TEST_IS_INTEGER
+        type = TEST_METRIC_TYPE
       )
 
     assertThat(multiMetric.toString()).isEqualTo(
       "# HELP $TEST_METRIC_NAME $TEST_METRIC_HELP\n" +
           "# TYPE $TEST_METRIC_NAME ${TEST_METRIC_TYPE.name.toLowerCase()}\n" +
-          "$TEST_METRIC_NAME{foo=\"fooValue1\",bar=\"barValue1\"} 1\n" +
+          "$TEST_METRIC_NAME{foo=\"fooValue1\",bar=\"barValue1\"} 1.0\n" +
           "$TEST_METRIC_NAME{foo=\"fooValue2\",bar=\"barValue2\"} 2\n" +
-          "$TEST_METRIC_NAME{baz=\"bazValue3\"} 3"
+          "$TEST_METRIC_NAME{baz=\"bazValue3\"} 3.0"
     )
   }
 
@@ -56,8 +54,7 @@ internal class MultiMetricTest {
         metrics = metrics,
         name = TEST_METRIC_NAME,
         help = TEST_METRIC_HELP,
-        type = TEST_METRIC_TYPE,
-        isInteger = TEST_IS_INTEGER
+        type = TEST_METRIC_TYPE
       )
       assertWithMessage("Expected IllegalArgumentException about invalid label name.")
     } catch (e: IllegalArgumentException) {
@@ -73,8 +70,7 @@ internal class MultiMetricTest {
         metrics = metrics,
         name = TEST_METRIC_NAME,
         help = TEST_METRIC_HELP,
-        type = TEST_METRIC_TYPE,
-        isInteger = TEST_IS_INTEGER
+        type = TEST_METRIC_TYPE
       )
       assertWithMessage("Expected IllegalArgumentException about invalid label value.")
     } catch (e: IllegalArgumentException) {
