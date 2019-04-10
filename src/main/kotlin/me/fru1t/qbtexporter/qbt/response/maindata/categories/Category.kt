@@ -9,7 +9,7 @@ data class Category(
   /** The user-defined name for this category. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("name")
-  val name: String?,
+  val name: String? = null,
 
   /**
    * The save path for this category. When automatic torrent management is enabled for a given
@@ -17,5 +17,5 @@ data class Category(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("savePath")
-  val savePath: String?
+  val savePath: String? = null
 )

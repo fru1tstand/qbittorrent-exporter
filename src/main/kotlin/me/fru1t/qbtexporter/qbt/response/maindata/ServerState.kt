@@ -15,12 +15,12 @@ data class ServerState(
   /** Total downloaded bytes from all torrents (including deleted ones) across all sessions. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("alltime_dl")
-  val allTimeDownloadedBytes: Long?,
+  val allTimeDownloadedBytes: Long? = null,
 
   /** Total uploaded bytes from all torrents (including deleted ones) across all sessions. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("alltime_ul")
-  val allTimeUploadedBytes: Long?,
+  val allTimeUploadedBytes: Long? = null,
 
   /**
    * Share ratio calculated by taking all time upload divided by all time download and rounding to
@@ -28,23 +28,23 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("global_ratio")
-  val allTimeShareRatio: String?,
+  val allTimeShareRatio: String? = null,
 
   // Status
   /** The network status which is one of: `connected`, `disconnected`, or `firewalled`. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("connection_status")
-  val connectionStatus: String?,
+  val connectionStatus: String? = null,
 
   /** The frequency at which the torrents table should refresh (used in the webUI) in ms. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("refresh_interval")
-  val refreshIntervalMs: Int?,
+  val refreshIntervalMs: Int? = null,
 
   /** Whether or not the qBt torrent queueing system is enabled. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("queueing")
-  val isTorrentQueueingEnabled: Boolean?,
+  val isTorrentQueueingEnabled: Boolean? = null,
 
   // I/O - Most of the source of these data are found in
   // https://github.com/qbittorrent/qBittorrent/blob/v4_1_x/src/base/bittorrent/cachestatus.h
@@ -54,7 +54,7 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("average_time_queue")
-  val diskAverageCacheQueueTimeMs: Long?,
+  val diskAverageCacheQueueTimeMs: Long? = null,
 
   /**
    * The number of used bytes for the disk cache. This number is independent from the maximum size
@@ -63,12 +63,12 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("total_buffers_size")
-  val diskCacheSizeBytes: Long?,
+  val diskCacheSizeBytes: Long? = null,
 
   /** The number of bytes available in the default save path. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("free_space_on_disk")
-  val diskFreeSpaceBytes: Long?,
+  val diskFreeSpaceBytes: Long? = null,
 
   /**
    * The number of disk jobs queued up in the disk cache. It's unknown whether this is solely reads,
@@ -76,7 +76,7 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("queued_io_jobs")
-  val diskQueueJobCount: Long?,
+  val diskQueueJobCount: Long? = null,
 
   /**
    * The number of bytes pending to be flushed to/from disk to/from the disk cache. It's unknown
@@ -84,7 +84,7 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("total_queued_size")
-  val diskQueueSizeBytes: Long?,
+  val diskQueueSizeBytes: Long? = null,
 
   /**
    * The percent (rounded to two decimal places) of disk read requests that were handled by the
@@ -92,7 +92,7 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("read_cache_hits")
-  val diskReadCacheHitPercent: String?,
+  val diskReadCacheHitPercent: String? = null,
 
   /**
    * Percent of connected peers that are issuing read requests (from disk or cache). Literally
@@ -102,7 +102,7 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("read_cache_overload")
-  val diskReadCacheOverloadPercent: String?,
+  val diskReadCacheOverloadPercent: String? = null,
 
   /**
    * Percent of connected peers that are issuing write requests (to disk or cache). Literally
@@ -113,24 +113,24 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("write_cache_overload")
-  val diskWriteCacheOverloadPercent: String?,
+  val diskWriteCacheOverloadPercent: String? = null,
 
   // Network - Most of the source of these data are found in
   // https://github.com/qbittorrent/qBittorrent/blob/v4_1_x/src/base/bittorrent/sessionstatus.h
   /** The number of DHT nodes connected. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dht_nodes")
-  val networkDhtNodeCount: Long?,
+  val networkDhtNodeCount: Long? = null,
 
   /** The number of bytes downloaded this session. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dl_info_data")
-  val currentSessionDownloadedBytes: Long?,
+  val currentSessionDownloadedBytes: Long? = null,
 
   /** The number of bytes uploaded this session. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("up_info_data")
-  val currentSessionUploadedBytes: Long?,
+  val currentSessionUploadedBytes: Long? = null,
 
   /**
    * The number of bytes wasted this session. Waste is a product of corrupt or incomplete torrent
@@ -138,35 +138,35 @@ data class ServerState(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("total_wasted_session")
-  val currentSessionBytesWasted: Long?,
+  val currentSessionBytesWasted: Long? = null,
 
   /** Whether or not qBt is using alternative speed limits set by the user. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("use_alt_speed_limits")
-  val networkIsAlternativeSpeedLimitsEnabled: Boolean?,
+  val networkIsAlternativeSpeedLimitsEnabled: Boolean? = null,
 
   /** The number of peer connections. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("total_peer_connections")
-  val networkPeerConnectionCount: Long?,
+  val networkPeerConnectionCount: Long? = null,
 
   /** The instantaneous download rate in bytes per second. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dl_info_speed")
-  val networkDownloadSpeedBytesPerSecond: Long?,
+  val networkDownloadSpeedBytesPerSecond: Long? = null,
 
   /** The user set maximum download rate allowed in bytes per second. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dl_rate_limit")
-  val networkDownloadSpeedCapBytesPerSecond: Long?,
+  val networkDownloadSpeedCapBytesPerSecond: Long? = null,
 
   /** The instantaneous upload rate in bytes per second. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("up_info_speed")
-  val networkUploadSpeedBytesPerSecond: Long?,
+  val networkUploadSpeedBytesPerSecond: Long? = null,
 
   /** The user set maximum upload rate allowed in bytes per second. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("up_rate_limit")
-  val networkUploadSpeedCapBytesPerSecond: Long?
+  val networkUploadSpeedCapBytesPerSecond: Long? = null
 )

@@ -10,7 +10,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 /**
  * The root json object returned from qBittorrent's `api/v2/sync/maindata` api call. Values are
  * verified from qBittorrent source code. See
- * [snyccontroller.cpp](https://github.com/qbittorrent/qBittorrent/blob/master/src/webui/api/synccontroller.cpp).
+ * [synccontroller.cpp](https://github.com/qbittorrent/qBittorrent/blob/master/src/webui/api/synccontroller.cpp).
  *
  * This class currently does not implement `torrents_removed` or `categories_removed` as we'll
  * almost always be obtaining a full update. If that condition changes, though, there's nothing else
@@ -24,7 +24,7 @@ data class Maindata(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("full_update")
-  val isFullUpdate: Boolean?,
+  val isFullUpdate: Boolean? = null,
 
   /**
    * The server-generated response ID which can be used in the next `maindata` API request to
@@ -32,17 +32,17 @@ data class Maindata(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("rid")
-  val responseId: Int?,
+  val responseId: Int? = null,
 
   /** See [ServerState]. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("server_state")
-  val serverState: ServerState?,
+  val serverState: ServerState? = null,
 
   /** A map of category names to [Category] data. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("categories")
-  val categories: Map<String, Category>?,
+  val categories: Map<String, Category>? = null,
 
   /**
    * A map of torrent hashes to [Torrent] data. Note the [Torrent] object does not contain its own
@@ -50,5 +50,5 @@ data class Maindata(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("torrents")
-  val torrents: Map<String, Torrent>?
+  val torrents: Map<String, Torrent>? = null
 )

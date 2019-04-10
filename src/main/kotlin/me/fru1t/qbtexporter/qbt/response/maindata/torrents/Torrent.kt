@@ -25,7 +25,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("added_on")
-  val dateAddedUnixTimestamp: Long?,
+  val dateAddedUnixTimestamp: Long? = null,
 
   /**
    * The unix timestamp (seconds since unix epoch) this torrent was completed (that is, all pieces
@@ -36,12 +36,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("completion_on")
-  val dateCompletedUnixTimestamp: Long?,
+  val dateCompletedUnixTimestamp: Long? = null,
 
   /** The amount of bytes remaining, to download. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("amount_left")
-  val downloadRemainingBytes: Long?,
+  val downloadRemainingBytes: Long? = null,
 
   /**
    * Whether or not the torrent has been set to be automatically managed. Automatic torrent
@@ -50,12 +50,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("auto_tmm")
-  val isAutomaticallyManaged: Boolean?,
+  val isAutomaticallyManaged: Boolean? = null,
 
   /** The torrent's category, if any. In qBittorent, a torrent can only have a single category. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("category")
-  val category: String?,
+  val category: String? = null,
 
   /**
    * The number of "actual" bytes completed from any source. "Actual" meaning, data that's passed
@@ -64,7 +64,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("completed")
-  val completedBytes: Long?,
+  val completedBytes: Long? = null,
 
   /**
    * The set maximum download rate in bytes per second. See
@@ -72,7 +72,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dl_limit")
-  val downloadRateLimitBytesPerSecond: Int?,
+  val downloadRateLimitBytesPerSecond: Int? = null,
 
   /**
    * The download rate of the torrent's payload only (ie. doesn't include protocol chatter) in
@@ -80,7 +80,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("dlspeed")
-  val downloadPayloadRateBytesPerSecond: Int?,
+  val downloadPayloadRateBytesPerSecond: Int? = null,
 
   /**
    * The number of downloaded bytes across all sessions including wasted data. See
@@ -88,7 +88,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("downloaded")
-  val downloadTotalBytes: Long?,
+  val downloadTotalBytes: Long? = null,
 
   /**
    * The number of downloaded bytes, including wasted data, for the current session (a session is
@@ -97,7 +97,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("downloaded_session")
-  val downloadSessionBytes: Long?,
+  val downloadSessionBytes: Long? = null,
 
   /**
    * The number of seconds qBittorrent predicts the torrent will remain active. For downloads, this
@@ -105,7 +105,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("eta")
-  val etaSeconds: Long?,
+  val etaSeconds: Long? = null,
 
   /**
    * Whether or not the first and last pieces have high priority, with all pieces in between having
@@ -113,7 +113,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("f_l_piece_prio")
-  val hasFirstAndLastPiecePriority: Boolean?,
+  val hasFirstAndLastPiecePriority: Boolean? = null,
 
   /**
    * Whether or not this torrent was force started. Force start is a qBittorrent concept that means
@@ -122,7 +122,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("force_start")
-  val isForceStarted: Boolean?,
+  val isForceStarted: Boolean? = null,
 
   /**
    * The unix timestamp (seconds since unix epoch) since the last time this torrent was downloading
@@ -133,27 +133,27 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("last_activity")
-  val dateSinceLastActivityUnixTimestamp: Long?,
+  val dateSinceLastActivityUnixTimestamp: Long? = null,
 
   /** The magnet uri for this torrent. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("magnet_uri")
-  val magnetUri: String?,
+  val magnetUri: String? = null,
 
   /** The user set maximum share ratio this torrent should stop seeding at or `-1` for infinite. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("max_ratio")
-  val maxRatio: Double?,
+  val maxRatio: Double? = null,
 
   /** The user set amount of minutes this torrent should seed for. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("max_seeding_time")
-  val maxSeedTimeMinutes: Int?,
+  val maxSeedTimeMinutes: Int? = null,
 
   /** The display name for this torrent. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("name")
-  val displayName: String?,
+  val displayName: String? = null,
 
   /**
    * The number of seeders seeding this torrent. A tracker's announce for the number of seeders
@@ -162,7 +162,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("num_complete")
-  val seedersAvailable: Int?,
+  val seedersAvailable: Int? = null,
 
   /**
    * The number of leechers downloading this torrent. A tracker's announce for the number of
@@ -171,17 +171,17 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("num_incomplete")
-  val leechersAvailable: Int?,
+  val leechersAvailable: Int? = null,
 
   /** The number of leechers this client is connected to. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("num_leechs")
-  val leechersConnected: Int?,
+  val leechersConnected: Int? = null,
 
   /** The number of seeders this client is connected to. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("num_seeds")
-  val seedersConnected: Int?,
+  val seedersConnected: Int? = null,
 
   /**
    * The position this torrent is in within qBittorrent's automatic torrent management (TMM)
@@ -190,7 +190,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("priority")
-  val queuePosition: Int?,
+  val queuePosition: Int? = null,
 
   /**
    * A decimal from `0.00` to `1.00` denoting how much of the torrent has been downloaded. This
@@ -198,7 +198,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("progress")
-  val progressDecimal: Double?,
+  val progressDecimal: Double? = null,
 
   /**
    * The share ratio of this torrent. This is calculated by dividing the all time upload bytes
@@ -208,7 +208,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("ratio")
-  val ratio: Double?,
+  val ratio: Double? = null,
 
   /**
    * Same as [maxRatio] except this value is stored internally by qBittorrent in case the torrent
@@ -217,12 +217,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("ratio_limit")
-  val internallyStoredMaxRatio: Double?,
+  val internallyStoredMaxRatio: Double? = null,
 
   /** The absolute save path for the torrent. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("save_path")
-  val savePath: String?,
+  val savePath: String? = null,
 
   /**
    * The same as [maxSeedTimeMinutes] except this value is stored internally by qBittorrent in case
@@ -231,7 +231,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("seeding_time_limit")
-  val internallyStoredMaxSeedTimeMinutes: Int?,
+  val internallyStoredMaxSeedTimeMinutes: Int? = null,
 
   /**
    * The last unix timestamp (seconds since unix epoch) this torrent collectively had a 100% file
@@ -241,7 +241,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("seen_complete")
-  val lastSeenCompleteUnixTimestamp: Long?,
+  val lastSeenCompleteUnixTimestamp: Long? = null,
 
   /**
    * Whether or not "sequential download" is enabled. Sequential download is a mode in libtorrent
@@ -251,12 +251,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("seq_dl")
-  val isSequentiallyDownloading: Boolean?,
+  val isSequentiallyDownloading: Boolean? = null,
 
   /** The size of this torrent minus the unwanted files, in bytes. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("size")
-  val sizeWantedBytes: Long?,
+  val sizeWantedBytes: Long? = null,
 
   /**
    * A short descriptive string status of the current torrent.
@@ -284,12 +284,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("state")
-  val status: String?,
+  val status: String? = null,
 
   /** Whether or not super seeding is enabled for this torrent. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("super_seeding")
-  val isSuperSeeding: Boolean?,
+  val isSuperSeeding: Boolean? = null,
 
   /**
    * A comma-space delimited list of tags this torrent is attached to. For example
@@ -297,7 +297,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("tags")
-  val tags: String?,
+  val tags: String? = null,
 
   /**
    * The amount of time in seconds this torrent has spent "started" (that is, not complete and not
@@ -305,12 +305,12 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("time_active")
-  val activeTimeSeconds: Int?,
+  val activeTimeSeconds: Int? = null,
 
   /** The total number of bytes the this torrent contains regardless of "want". */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("total_size")
-  val sizeTotalBytes: Long?,
+  val sizeTotalBytes: Long? = null,
 
   /**
    * The URL of the last working tracker. If no tracker request has been successful yet, this will
@@ -318,7 +318,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("tracker")
-  val currentTracker: String?,
+  val currentTracker: String? = null,
 
   /**
    * The user-imposed maximum upload rate in bytes per second this torrent should upload at. Value
@@ -326,7 +326,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("up_limit")
-  val uploadRateLimitBytesPerSecond: Int?,
+  val uploadRateLimitBytesPerSecond: Int? = null,
 
   /**
    * The number of uploaded bytes across all sessions including wasted data. See
@@ -334,7 +334,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("uploaded")
-  val uploadTotalBytes: Long?,
+  val uploadTotalBytes: Long? = null,
 
   /**
    * The number of uploaded bytes including wasted data, for the current session (a session is reset
@@ -343,7 +343,7 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("uploaded_session")
-  val uploadSessionBytes: Long?,
+  val uploadSessionBytes: Long? = null,
 
   /**
    * The upload rate of the torrent's payload data only (ie. doesn't include protocol chatter) in
@@ -351,5 +351,5 @@ data class Torrent(
    */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("upspeed")
-  val uploadPayloadRateBytesPerSecond: Int?
+  val uploadPayloadRateBytesPerSecond: Int? = null
 )
