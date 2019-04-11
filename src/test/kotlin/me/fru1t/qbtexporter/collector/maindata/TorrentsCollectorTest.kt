@@ -32,14 +32,14 @@ internal class TorrentsCollectorTest {
     /**
      * Collects on [torrentsCollector] and returns only the internal metrics portion of the metrics.
      */
-    fun collectAndTrim(torrentsCollector: TorrentsCollector): String =
+    private fun collectAndTrim(torrentsCollector: TorrentsCollector): String =
       torrentsCollector.collect(TEST_DATA).toString()
         .lines()
         .filterIndexed { index, _ -> index > 1 }
         .joinToString(separator = "\n")
 
     /** Creates the metric name including label for the given torrent and collector.*/
-    fun labelOf(torrentPair: Pair<String, Torrent>, torrentsCollector: TorrentsCollector): String =
+    private fun labelOf(torrentPair: Pair<String, Torrent>, torrentsCollector: TorrentsCollector): String =
       "qbt_torrent_${torrentsCollector.name.toLowerCase()}{hash=\"${torrentPair.first}\"," +
           "name=\"${torrentPair.second.displayName!!}\"}"
 
@@ -51,7 +51,7 @@ internal class TorrentsCollectorTest {
      * the order in which they're defined. If the torrent shouldn't produce an output line for the
      * [torrentsCollector], the [expectedOutputs] value should be `null`.
      */
-    fun assertOutput(torrentsCollector: TorrentsCollector, vararg expectedOutputs: Number?) {
+    private fun assertOutput(torrentsCollector: TorrentsCollector, vararg expectedOutputs: Number?) {
       assertWithMessage(
         "Test is not set up correctly. The number of expected outputs needs to equal the number " +
             "of inputs. To expect no output, pass null.")
