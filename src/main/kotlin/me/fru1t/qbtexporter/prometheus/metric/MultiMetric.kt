@@ -22,7 +22,7 @@ import me.fru1t.qbtexporter.prometheus.MetricType
  * additional parameter details.
  */
 class MultiMetric(
-  var metrics: Map<Map<String, String>, Number>,
+  var metrics: Map<Map<String, String>, Number?>,
   name: String,
   help: String,
   type: MetricType

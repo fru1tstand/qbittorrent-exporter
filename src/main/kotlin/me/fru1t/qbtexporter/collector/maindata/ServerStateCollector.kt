@@ -26,8 +26,17 @@ enum class ServerStateCollector(
     { serverState -> serverState?.allTimeUploadedBytes }
   );
 
+  private companion object {
+    private const val METRIC_NAME_PREFIX = "qbt_server_state_"
+  }
+
   private val metric: SingleMetric by lazy {
-    SingleMetric(value = 0, name = name.toLowerCase(), help = help, type = metricType)
+    SingleMetric(
+      value = 0,
+      name = METRIC_NAME_PREFIX + name.toLowerCase(),
+      help = help,
+      type = metricType
+    )
   }
 
   /** Returns the [Metric] produced by this collector, given [maindata]. */
