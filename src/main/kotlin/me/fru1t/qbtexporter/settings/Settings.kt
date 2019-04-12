@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.settings
 
+import me.fru1t.qbtexporter.collector.MaindataCollectorSettings
 import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation
 
@@ -22,5 +23,9 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
  */
 data class Settings(
   @Documentation("Settings specific to qBittorrent.")
-  var qbtSettings: QbtSettings? = QbtSettings()
+  var qbtSettings: QbtSettings? = QbtSettings(),
+
+  @Documentation("Enables the collectors for prometheus.")
+  var collectors: Map<String, Map<String, Boolean>>? =
+    MaindataCollectorSettings.createDefaultSettings()
 )

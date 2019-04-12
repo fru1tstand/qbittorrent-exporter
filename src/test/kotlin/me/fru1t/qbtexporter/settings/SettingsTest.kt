@@ -120,7 +120,7 @@ internal class SettingsTest {
           "${settingsClass.qualifiedName} must be a pure data class -- it cannot have fields " +
               "declared outside the primary constructor.")
         .that(settingsClass.declaredMemberProperties.map { it.name })
-        .isEqualTo(settingsClass.primaryConstructor!!.parameters.map { it.name })
+        .containsExactlyElementsIn(settingsClass.primaryConstructor!!.parameters.map { it.name })
 
       assertWithMessage(
           "${settingsClass.qualifiedName} must be a pure data class -- it cannot have functions " +

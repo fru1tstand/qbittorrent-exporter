@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.collector.maindata
 
+import me.fru1t.qbtexporter.collector.MaindataCollector
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
@@ -10,7 +11,7 @@ enum class TorrentsCollector(
   help: String,
   metricType: MetricType,
   private val update: (Map<String, Torrent>) -> Map<Map<String, String>, Number?>
-) {
+) : MaindataCollector {
   DATE_ADDED_UNIX_TIMESTAMP(
     "The unix timestamp (in seconds since unix epoch) this torrent was added.",
     MetricType.COUNTER,
@@ -70,9 +71,10 @@ enum class TorrentsCollector(
     )
   }
 
-  /** Returns the [Metric] produced by this collector, given [maindata]. */
-  fun collect(maindata: Maindata): Metric {
+  override fun collect(maindata: Maindata): Metric {
     metric.metrics = update(maindata.torrents ?: mapOf())
     return metric
   }
+
+  override fun getName(): String = name
 }

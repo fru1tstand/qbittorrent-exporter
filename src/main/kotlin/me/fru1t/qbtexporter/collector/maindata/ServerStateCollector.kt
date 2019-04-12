@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.collector.maindata
 
+import me.fru1t.qbtexporter.collector.MaindataCollector
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.SingleMetric
@@ -11,7 +12,7 @@ enum class ServerStateCollector(
   help: String,
   metricType: MetricType,
   private val update: (ServerState?) -> Number?
-) {
+) : MaindataCollector {
   ALL_TIME_DOWNLOAD_BYTES(
     "The total number of downloaded bytes from all torrents (including deleted ones) across " +
         "all sessions.",
@@ -39,9 +40,10 @@ enum class ServerStateCollector(
     )
   }
 
-  /** Returns the [Metric] produced by this collector, given [maindata]. */
-  fun collect(maindata: Maindata): Metric {
+  override fun collect(maindata: Maindata): Metric {
     metric.value = update(maindata.serverState)
     return metric
   }
+
+  override fun getName(): String = name
 }
