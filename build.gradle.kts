@@ -42,6 +42,9 @@ dependencies {
     implementation(ktor())
     implementation(ktor("client-core"))
     implementation(ktor("client-apache"))
+    implementation(ktor("server-core"))
+    implementation(ktor("server-jetty"))
+    implementation("org.slf4j:slf4j-simple:1.7.26")
 
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")

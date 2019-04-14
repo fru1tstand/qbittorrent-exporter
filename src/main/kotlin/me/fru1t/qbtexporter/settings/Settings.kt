@@ -25,7 +25,7 @@ data class Settings(
   @Documentation("Settings specific to qBittorrent.")
   var qbtSettings: QbtSettings? = QbtSettings(),
 
-  @Documentation("Enables the collectors for prometheus.")
-  var collectors: Map<String, Map<String, Boolean>>? =
+  @Documentation("Toggles for the qBittorrent maindata collectors.")
+  var maindataCollectors: Map<String, Map<String, Boolean>>? =
     MaindataCollectorSettings.createDefaultSettings()
 )
