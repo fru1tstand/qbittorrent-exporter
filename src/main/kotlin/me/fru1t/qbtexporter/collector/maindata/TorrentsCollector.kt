@@ -22,7 +22,7 @@ enum class TorrentsCollector(
         "that have passed CRC and is verified to be non-corrupt. Any source as it's possible " +
         "that a torrent could be pieced together from sources other than that of qbt.",
     MetricType.GAUGE,
-    { torrents -> torrents.mapNonZeroToMetric { it.completedBytes } }
+    { torrents -> torrents.mapAllToMetric { it.completedBytes } }
   ),
   DOWNLOAD_PAYLOAD_RATE_BYTES_PER_SECOND(
     "The download rate of the torrent's payload only (ie. doesn't include protocol chatter) " +
@@ -39,7 +39,7 @@ enum class TorrentsCollector(
     "The number of downloaded bytes during the current session including wasted data. A session " +
         "is defined by torrent lifecycle (ie. when a torrent is stopped, its session is ended).",
     MetricType.COUNTER,
-    { torrents -> torrents.mapAllToMetric { it.downloadSessionBytes } }
+    { torrents -> torrents.mapNonZeroToMetric { it.downloadSessionBytes } }
   ),
   SEEDERS_AVAILABLE(
     "The number of seeders seeding this torrent. A tracker's announce for the number of seeders " +
@@ -66,9 +66,9 @@ enum class TorrentsCollector(
     { torrents -> torrents.mapNonZeroToMetric { it.leechersConnected } }
   ),
   RATIO(
-    "The share ratio of this torrent (rounded to two decimal places). If a torrent is " +
-        "downloading, this ratio is calculated using the total download bytes, but if the " +
-        "torrent is fully downloaded, the ratio is calculated using the size of the torrent.",
+    "The share ratio of this torrent. If a torrent is downloading, this ratio is calculated using " +
+        "the total download bytes, but if the torrent is fully downloaded, the ratio is " +
+        "calculated using the size of the torrent.",
     MetricType.GAUGE,
     { torrents -> torrents.mapAllToMetric { it.ratio } }
   ),
@@ -87,7 +87,7 @@ enum class TorrentsCollector(
     "The number of uploaded bytes including wasted data for the current session. A session is " +
         "defined by when the torrent is paused (including qBittorrent client shutdown).",
     MetricType.COUNTER,
-    { torrents -> torrents.mapAllToMetric { it.uploadSessionBytes } }
+    { torrents -> torrents.mapNonZeroToMetric { it.uploadSessionBytes } }
   ),
   UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND(
     "The upload rate of the torrent's payload data only (ie. doesn't include protocol chatter) " +
@@ -124,7 +124,7 @@ enum class TorrentsCollector(
     private fun Map<String, Torrent>.mapNonZeroToMetric(
       collector: (Torrent) -> Number?
     ): Map<Map<String, String>, Number?> =
-      filter { entry -> (collector(entry.value) ?: 0) != 0 }
+      filter { entry -> (collector(entry.value) ?: 0).toDouble() != 0.0 }
         .mapKeys { entry -> createTorrentLabelMap(entry.value, entry.key) }
         .mapValues { entry -> collector(entry.value) }
   }

@@ -34,6 +34,7 @@ internal class TorrentsCollectorTest {
           "torrent2hash",
           Torrent(
             displayName = "torrent2",
+            downloadRemainingBytes = 0,
             completedBytes = 0,
             downloadPayloadRateBytesPerSecond = 0,
             downloadTotalBytes = 0,
@@ -117,7 +118,7 @@ internal class TorrentsCollectorTest {
 
   @Test
   fun collect_downloadSessionBytes() {
-    assertOutput(TorrentsCollector.DOWNLOAD_SESSION_BYTES, 5, 0)
+    assertOutput(TorrentsCollector.DOWNLOAD_SESSION_BYTES, 5, null)
   }
 
   @Test
@@ -157,7 +158,7 @@ internal class TorrentsCollectorTest {
 
   @Test
   fun collect_uploadSessionBytes() {
-    assertOutput(TorrentsCollector.UPLOAD_SESSION_BYTES, 13, 0)
+    assertOutput(TorrentsCollector.UPLOAD_SESSION_BYTES, 13, null)
   }
 
   @Test
