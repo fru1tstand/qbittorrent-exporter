@@ -14,15 +14,38 @@ internal class TorrentsCollectorTest {
           "torrent1hash",
           Torrent(
             displayName = "torrent1",
-            dateAddedUnixTimestamp = 1,
-            uploadPayloadRateBytesPerSecond = 2
+            downloadRemainingBytes = 1,
+            completedBytes = 2,
+            downloadPayloadRateBytesPerSecond = 3,
+            downloadTotalBytes = 4,
+            downloadSessionBytes = 5,
+            seedersAvailable = 6,
+            seedersConnected = 7,
+            leechersAvailable = 8,
+            leechersConnected = 9,
+            ratio = 10.10,
+            activeTimeSeconds = 11,
+            uploadTotalBytes = 12,
+            uploadSessionBytes = 13,
+            uploadPayloadRateBytesPerSecond = 14
           )
         ),
         Pair(
           "torrent2hash",
           Torrent(
             displayName = "torrent2",
-            dateAddedUnixTimestamp = 1000,
+            completedBytes = 0,
+            downloadPayloadRateBytesPerSecond = 0,
+            downloadTotalBytes = 0,
+            downloadSessionBytes = 0,
+            seedersAvailable = 0,
+            seedersConnected = 0,
+            leechersAvailable = 0,
+            leechersConnected = 0,
+            ratio = 0.0,
+            activeTimeSeconds = 0,
+            uploadTotalBytes = 0,
+            uploadSessionBytes = 0,
             uploadPayloadRateBytesPerSecond = 0
           )
         )
@@ -73,12 +96,72 @@ internal class TorrentsCollectorTest {
   }
 
   @Test
-  fun collect_dateAddedUnixTimestamp() {
-    assertOutput(TorrentsCollector.DATE_ADDED_UNIX_TIMESTAMP, 1, 1000)
+  fun collect_downloadRemainingBytes() {
+    assertOutput(TorrentsCollector.DOWNLOAD_REMAINING_BYTES, 1, null)
+  }
+
+  @Test
+  fun collect_completedBytes() {
+    assertOutput(TorrentsCollector.COMPLETED_BYTES, 2, 0)
+  }
+
+  @Test
+  fun collect_downloadPayloadRateBytesPerSecond() {
+    assertOutput(TorrentsCollector.DOWNLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 3, null)
+  }
+
+  @Test
+  fun collect_downloadTotalBytes() {
+    assertOutput(TorrentsCollector.DOWNLOAD_TOTAL_BYTES, 4, 0)
+  }
+
+  @Test
+  fun collect_downloadSessionBytes() {
+    assertOutput(TorrentsCollector.DOWNLOAD_SESSION_BYTES, 5, 0)
+  }
+
+  @Test
+  fun collect_seedersAvailable() {
+    assertOutput(TorrentsCollector.SEEDERS_AVAILABLE, 6, null)
+  }
+
+  @Test
+  fun collect_seedersConnected() {
+    assertOutput(TorrentsCollector.SEEDERS_CONNECTED, 7, null)
+  }
+
+  @Test
+  fun collect_leechersAvailable() {
+    assertOutput(TorrentsCollector.LEECHERS_AVAILABLE, 8, null)
+  }
+
+  @Test
+  fun collect_leechersConnected() {
+    assertOutput(TorrentsCollector.LEECHERS_CONNECTED, 9, null)
+  }
+
+  @Test
+  fun collect_ratio() {
+    assertOutput(TorrentsCollector.RATIO, 10.10, 0.0)
+  }
+
+  @Test
+  fun collect_activeTimeSeconds() {
+    assertOutput(TorrentsCollector.ACTIVE_TIME_SECONDS, 11, 0)
+  }
+
+  @Test
+  fun collect_uploadTotalBytes() {
+    assertOutput(TorrentsCollector.UPLOAD_TOTAL_BYTES, 12, 0)
+  }
+
+  @Test
+  fun collect_uploadSessionBytes() {
+    assertOutput(TorrentsCollector.UPLOAD_SESSION_BYTES, 13, 0)
   }
 
   @Test
   fun collect_uploadPayloadRateBytesPerSecond() {
-    assertOutput(TorrentsCollector.UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 2, null)
+    assertOutput(TorrentsCollector.UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 14, null)
   }
 }

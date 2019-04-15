@@ -12,21 +12,88 @@ enum class TorrentsCollector(
   metricType: MetricType,
   private val update: (Map<String, Torrent>) -> Map<Map<String, String>, Number?>
 ) : MaindataCollector {
-  DATE_ADDED_UNIX_TIMESTAMP(
-    "The unix timestamp (in seconds since unix epoch) this torrent was added.",
-    MetricType.COUNTER,
-    { torrents -> torrents.mapAllToMetric { torrent -> torrent.dateAddedUnixTimestamp ?: 0 } }
+  DOWNLOAD_REMAINING_BYTES(
+    "The amount of bytes remaining to download, including those of unwanted files.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.downloadRemainingBytes } }
   ),
-
+  COMPLETED_BYTES(
+    "The amount of actually bytes completed from any source. Actually, meaning, blocks of data " +
+        "that have passed CRC and is verified to be non-corrupt. Any source as it's possible " +
+        "that a torrent could be pieced together from sources other than that of qbt.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.completedBytes } }
+  ),
+  DOWNLOAD_PAYLOAD_RATE_BYTES_PER_SECOND(
+    "The download rate of the torrent's payload only (ie. doesn't include protocol chatter) " +
+        "in bytes per second.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.downloadPayloadRateBytesPerSecond } }
+  ),
+  DOWNLOAD_TOTAL_BYTES(
+    "The number of downloaded bytes across all sessions including wasted data.",
+    MetricType.COUNTER,
+    { torrents -> torrents.mapAllToMetric { it.downloadTotalBytes } }
+  ),
+  DOWNLOAD_SESSION_BYTES(
+    "The number of downloaded bytes during the current session including wasted data. A session " +
+        "is defined by torrent lifecycle (ie. when a torrent is stopped, its session is ended).",
+    MetricType.COUNTER,
+    { torrents -> torrents.mapAllToMetric { it.downloadSessionBytes } }
+  ),
+  SEEDERS_AVAILABLE(
+    "The number of seeders seeding this torrent. A tracker's announce for the number of seeders " +
+        "takes precedence for this value; otherwise qBt will take a best guess by polling the " +
+        "swarm.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.seedersAvailable } }
+  ),
+  SEEDERS_CONNECTED(
+    "The number of seeders this client is connected to.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.seedersConnected } }
+  ),
+  LEECHERS_AVAILABLE(
+    "The number of leechers downloading this torrent (excluding oneself, if applicable). A " +
+        "tracker's announce for the number of leechers takes precedence for this value; " +
+        "otherwise qBt will take a best guess by polling the swarm.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.leechersAvailable } }
+  ),
+  LEECHERS_CONNECTED(
+    "The number of leechers this client is connected to.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapNonZeroToMetric { it.leechersConnected } }
+  ),
+  RATIO(
+    "The share ratio of this torrent (rounded to two decimal places). If a torrent is " +
+        "downloading, this ratio is calculated using the total download bytes, but if the " +
+        "torrent is fully downloaded, the ratio is calculated using the size of the torrent.",
+    MetricType.GAUGE,
+    { torrents -> torrents.mapAllToMetric { it.ratio } }
+  ),
+  ACTIVE_TIME_SECONDS(
+    "The amount of time in seconds this torrent has spent \"started\" (that is, not complete " +
+        "and not paused).",
+    MetricType.COUNTER,
+    { torrents -> torrents.mapAllToMetric { it.activeTimeSeconds } }
+  ),
+  UPLOAD_TOTAL_BYTES(
+    "The number of uploaded bytes across all sessions including wasted data.",
+    MetricType.COUNTER,
+    { torrents -> torrents.mapAllToMetric { it.uploadTotalBytes } }
+  ),
+  UPLOAD_SESSION_BYTES(
+    "The number of uploaded bytes including wasted data for the current session. A session is " +
+        "defined by when the torrent is paused (including qBittorrent client shutdown).",
+    MetricType.COUNTER,
+    { torrents -> torrents.mapAllToMetric { it.uploadSessionBytes } }
+  ),
   UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND(
     "The upload rate of the torrent's payload data only (ie. doesn't include protocol chatter) " +
         "in bytes per second.",
     MetricType.COUNTER,
-    { torrents ->
-      torrents.mapNonZeroToMetric { torrent ->
-        torrent.uploadPayloadRateBytesPerSecond ?: 0
-      }
-    }
+    { torrents -> torrents.mapNonZeroToMetric { it.uploadPayloadRateBytesPerSecond } }
   );
 
   private companion object {

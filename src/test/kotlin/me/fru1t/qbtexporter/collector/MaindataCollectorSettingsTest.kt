@@ -81,7 +81,7 @@ internal class MaindataCollectorSettingsTest {
       ),
       Pair(
         "torrents",
-        mapOf(Pair(TorrentsCollector.DATE_ADDED_UNIX_TIMESTAMP.getName(), true))
+        mapOf(Pair(TorrentsCollector.COMPLETED_BYTES.getName(), true))
       )
     )
     val result = MaindataCollectorSettings.getEnabledCollectors(settings)
@@ -89,6 +89,6 @@ internal class MaindataCollectorSettingsTest {
     assertThat(result)
       .containsAllOf(
         ServerStateCollector.ALL_TIME_UPLOAD_BYTES,
-        TorrentsCollector.DATE_ADDED_UNIX_TIMESTAMP)
+        TorrentsCollector.COMPLETED_BYTES)
   }
 }

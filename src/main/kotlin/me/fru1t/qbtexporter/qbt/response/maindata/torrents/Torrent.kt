@@ -38,7 +38,7 @@ data class Torrent(
   @SerializedName("completion_on")
   val dateCompletedUnixTimestamp: Long? = null,
 
-  /** The amount of bytes remaining, to download. */
+  /** The amount of bytes remaining to download, including those of unwanted files. */
   @Since(QbtVersion.RELEASE_4_1_5)
   @SerializedName("amount_left")
   val downloadRemainingBytes: Long? = null,
@@ -58,7 +58,7 @@ data class Torrent(
   val category: String? = null,
 
   /**
-   * The number of "actual" bytes completed from any source. "Actual" meaning, data that's passed
+   * The amount of "actual" bytes completed from any source. "Actual" meaning, data that's passed
    * CRC and is verified to be non-corrupt. Any source as it's possible that a torrent could be
    * pieced together from sources other than that of the torrent swarm.
    */
