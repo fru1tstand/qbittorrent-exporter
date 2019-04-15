@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertWithMessage
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import me.fru1t.qbtexporter.logger.Logger
+import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.Settings
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -24,7 +25,8 @@ internal class SettingsManagerImplTest {
 
   private lateinit var gson: Gson
   private lateinit var manager: SettingsManagerImpl
-  @Mock private lateinit var mockLogger: Logger
+  @Mock
+  private lateinit var mockLogger: Logger
 
   @BeforeEach
   fun setUp() {
@@ -61,6 +63,23 @@ internal class SettingsManagerImplTest {
     }
 
     assertThat(EXAMPLE_SETTINGS_FILE.exists()).isTrue()
+  }
+
+  @Test
+  fun get_loadsAgainIfSettingsFileLastModifiedChanges() {
+    // Assert initial state
+    val defaultSettings = Settings()
+    assertThat(manager.get().qbtSettings?.webUiAddress)
+      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
+
+    // Modify file
+    val writtenSettings = Settings(qbtSettings = QbtSettings(webUiAddress = "test"))
+    SETTINGS_FILE.writeText(gson.toJson(writtenSettings))
+    SETTINGS_FILE.setLastModified(SETTINGS_FILE.lastModified() + 1000)
+
+    // Assert another get will refresh from disk
+    assertThat(manager.get().qbtSettings?.webUiAddress)
+      .isEqualTo(writtenSettings.qbtSettings!!.webUiAddress)
   }
 
   @Test

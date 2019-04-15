@@ -26,6 +26,7 @@ class SettingsManagerImpl @Inject constructor(
 
   private val settingsFile: File = File(settingsFilePath + DEFAULT_SETTINGS_FILE_LOCATION)
   private var settings: Settings? = null
+  private var settingsFileLastModified: Long = 0
 
   init {
     val settingsDir = File(settingsFilePath)
@@ -41,9 +42,15 @@ class SettingsManagerImpl @Inject constructor(
     }
 
     settingsFile.writeText(gson.toJson(settings!!))
+    settingsFileLastModified = settingsFile.lastModified()
   }
 
   override fun get(): Settings {
+    if (settingsFile.lastModified() != settingsFileLastModified) {
+      settings = null
+      settingsFileLastModified = settingsFile.lastModified()
+    }
+
     if (settings == null) {
       if (!settingsFile.exists()) {
         logger.i("No settings file found, creating one.")
