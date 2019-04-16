@@ -142,6 +142,4 @@ enum class TorrentsCollector(
     metric.metrics = update(maindata.torrents ?: mapOf())
     return metric
   }
-
-  override fun getName(): String = name
 }

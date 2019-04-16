@@ -7,7 +7,4 @@ import me.fru1t.qbtexporter.qbt.response.Maindata
 interface MaindataCollector {
   /** Returns the [Metric] collected by consuming [maindata]. */
   fun collect(maindata: Maindata): Metric
-
-  /** Retrieves the name of this metric. */
-  fun getName(): String
 }

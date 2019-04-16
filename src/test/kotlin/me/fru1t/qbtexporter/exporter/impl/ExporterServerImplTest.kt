@@ -8,7 +8,7 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.response.readText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
-import me.fru1t.qbtexporter.collector.MaindataCollectorSettings
+import me.fru1t.qbtexporter.collector.CollectorSettingsHelper
 import me.fru1t.qbtexporter.qbt.api.QbtApi
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.settings.Settings
@@ -42,7 +42,7 @@ internal class ExporterServerImplTest {
     whenever(mockQbtApi.fetchMaindata()).thenReturn(Maindata())
 
     // Set up mock settings manager to return at least one enabled collector
-    val collectorSettings = MaindataCollectorSettings.createDefaultSettings()
+    val collectorSettings = CollectorSettingsHelper.createDefaultSettings()
     val entryInCollectorSettings = collectorSettings.entries.first()
     val enabledMaindataCollectors =
       mapOf(Pair(entryInCollectorSettings.key, entryInCollectorSettings.value.mapValues { true }))

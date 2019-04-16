@@ -139,6 +139,4 @@ enum class ServerStateCollector(
     metric.value = update(maindata.serverState)
     return metric
   }
-
-  override fun getName(): String = name
 }

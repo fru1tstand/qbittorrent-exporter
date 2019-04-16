@@ -9,7 +9,7 @@ import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import me.fru1t.qbtexporter.collector.MaindataCollector
-import me.fru1t.qbtexporter.collector.MaindataCollectorSettings
+import me.fru1t.qbtexporter.collector.CollectorSettingsHelper
 import me.fru1t.qbtexporter.exporter.ExporterServer
 import me.fru1t.qbtexporter.qbt.api.QbtApi
 import me.fru1t.qbtexporter.settings.SettingsManager
@@ -22,7 +22,7 @@ class ExporterServerImpl @Inject constructor(
   private val settingsManager: SettingsManager
 ) : ExporterServer {
   private val collectors: List<MaindataCollector> by lazy {
-    MaindataCollectorSettings.getEnabledCollectors(settingsManager.get().maindataCollectors)
+    CollectorSettingsHelper.getEnabledCollectors(settingsManager.get().maindataCollectors)
   }
   private val server: ApplicationEngine = embeddedServer(factory = Jetty, port = 9561) {
     routing {
