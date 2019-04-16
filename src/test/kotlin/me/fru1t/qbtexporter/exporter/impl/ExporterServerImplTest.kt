@@ -55,7 +55,10 @@ internal class ExporterServerImplTest {
   }
 
   private fun testDuringServerLifecycle(test: () -> Unit) {
-    exporterServerImpl.start()
+    // If starting the server produced an error, immediately error
+    val startResult = runCatching { exporterServerImpl.start() }
+    assertThat(startResult.exceptionOrNull()).isNull()
+
     test()
     exporterServerImpl.stop()
   }
