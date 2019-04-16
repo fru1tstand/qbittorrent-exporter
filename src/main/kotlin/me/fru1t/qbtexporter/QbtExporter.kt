@@ -16,6 +16,11 @@ class QbtExporter : Runnable {
   }
 
   override fun run() {
-    exporterServer.runBlocking()
+    exporterServer.start()
+    while (!Thread.interrupted()) {
+      Thread.sleep(50)
+    }
+    exporterServer.stop()
+    println("Stopped server gracefully. Bye!")
   }
 }

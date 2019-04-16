@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import kotlin.concurrent.thread
 
 internal class ExporterServerImplTest {
   @Mock private lateinit var mockQbtApi: QbtApi
@@ -32,14 +31,14 @@ internal class ExporterServerImplTest {
   }
 
   @Test
-  fun runBlocking_root() = testRunBlocking {
+  fun runBlocking_root() = testDuringServerLifecycle {
     val responseText =
       runBlocking { HttpClient(Apache).call("http://localhost:9561").response.readText() }
     assertThat(responseText).isEqualTo("<a href=\"/metrics\">metrics</a>")
   }
 
   @Test
-  fun runBlocking_metrics() = testRunBlocking {
+  fun runBlocking_metrics() = testDuringServerLifecycle {
     whenever(mockQbtApi.fetchMaindata()).thenReturn(Maindata())
 
     // Set up mock settings manager to return at least one enabled collector
@@ -55,9 +54,9 @@ internal class ExporterServerImplTest {
     assertThat(runBlocking { response.readText() }).isNotEmpty()
   }
 
-  private fun testRunBlocking(test: () -> Unit) {
-    val serverThread = thread { exporterServerImpl.runBlocking() }
+  private fun testDuringServerLifecycle(test: () -> Unit) {
+    exporterServerImpl.start()
     test()
-    serverThread.interrupt()
+    exporterServerImpl.stop()
   }
 }
