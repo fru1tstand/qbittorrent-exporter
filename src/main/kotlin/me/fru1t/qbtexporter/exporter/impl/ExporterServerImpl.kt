@@ -22,7 +22,8 @@ class ExporterServerImpl @Inject constructor(
   private val settingsManager: SettingsManager
 ) : ExporterServer {
   private val collectors: List<MaindataCollector> by lazy {
-    CollectorSettingsHelper.getEnabledCollectors(settingsManager.get().maindataCollectors)
+    CollectorSettingsHelper.getEnabledCollectors(
+      settingsManager.get().collectorSettings?.maindataCollectors)
   }
   private val server: ApplicationEngine = embeddedServer(factory = Jetty, port = 9561) {
     routing {

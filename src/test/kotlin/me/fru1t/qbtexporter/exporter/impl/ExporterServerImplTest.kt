@@ -8,6 +8,7 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.response.readText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
+import me.fru1t.qbtexporter.collector.CollectorSettings
 import me.fru1t.qbtexporter.collector.CollectorSettingsHelper
 import me.fru1t.qbtexporter.qbt.api.QbtApi
 import me.fru1t.qbtexporter.qbt.response.Maindata
@@ -46,7 +47,10 @@ internal class ExporterServerImplTest {
     val entryInCollectorSettings = collectorSettings.entries.first()
     val enabledMaindataCollectors =
       mapOf(Pair(entryInCollectorSettings.key, entryInCollectorSettings.value.mapValues { true }))
-    val settings = Settings(maindataCollectors = enabledMaindataCollectors)
+    val settings =
+      Settings(
+        collectorSettings = CollectorSettings(
+          maindataCollectors = enabledMaindataCollectors))
     whenever(mockSettingsManager.get()).thenReturn(settings)
 
     val response = runBlocking { HttpClient(Apache).call("http://localhost:9561/metrics").response }

@@ -1,6 +1,6 @@
 package me.fru1t.qbtexporter.settings
 
-import me.fru1t.qbtexporter.collector.CollectorSettingsHelper
+import me.fru1t.qbtexporter.collector.CollectorSettings
 import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation
 
@@ -22,10 +22,9 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
  *   settings).
  */
 data class Settings(
-  @Documentation("Settings specific to qBittorrent.")
+  @Documentation("qBittorrent-specific settings like web ui path.")
   var qbtSettings: QbtSettings? = QbtSettings(),
 
-  @Documentation("Toggles for the qBittorrent maindata collectors.")
-  var maindataCollectors: Map<String, Map<String, Boolean>>? =
-    CollectorSettingsHelper.createDefaultSettings()
+  @Documentation("Collector settings like which metrics are exported.")
+  var collectorSettings: CollectorSettings? = CollectorSettings()
 )
