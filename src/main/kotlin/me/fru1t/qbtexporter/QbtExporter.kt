@@ -2,6 +2,7 @@ package me.fru1t.qbtexporter
 
 import me.fru1t.qbtexporter.dagger.DaggerQbtExporterComponent
 import me.fru1t.qbtexporter.exporter.ExporterServer
+import me.fru1t.qbtexporter.logger.Logger
 import javax.inject.Inject
 
 fun main() {
@@ -10,6 +11,7 @@ fun main() {
 
 class QbtExporter : Runnable {
   @Inject lateinit var exporterServer: ExporterServer
+  @Inject lateinit var logger: Logger
 
   init {
     DaggerQbtExporterComponent.builder().build().inject(this)
@@ -21,6 +23,6 @@ class QbtExporter : Runnable {
       Thread.sleep(50)
     }
     exporterServer.stop()
-    println("Stopped server gracefully. Bye!")
+    logger.i("Server stopped gracefully. Bye!")
   }
 }

@@ -47,6 +47,7 @@ class SettingsManagerImpl @Inject constructor(
 
   override fun get(): Settings {
     if (settingsFile.lastModified() != settingsFileLastModified) {
+      logger.i("Settings have changed, reloading from disk.")
       settings = null
       settingsFileLastModified = settingsFile.lastModified()
     }
