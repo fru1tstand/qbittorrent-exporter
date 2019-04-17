@@ -26,7 +26,22 @@ class SettingsManagerImpl @Inject constructor(
   }
 
   private val settingsFile: File = File(settingsFilePath + DEFAULT_SETTINGS_FILE_LOCATION)
-  private val settings: Settings by lazyRelay()
+  private val settings: Settings by lazyRelay(signal = this::getLastUpdatedTimeMs) {
+    if (!settingsFile.canRead() && !settingsFile.canWrite()) {
+      throw RuntimeException(
+        "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
+      )
+    }
+
+    try {
+      gson.fromJson(settingsFile.reader(), Settings::class.java)
+    } catch (e: JsonSyntaxException) {
+      logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
+      writeExampleSettings()
+      logger.i("But I'm still gonna crash so you can figure out the issue.")
+      throw e
+    }
+  }
 
   init {
     val settingsDir = File(settingsFilePath)
@@ -49,24 +64,7 @@ class SettingsManagerImpl @Inject constructor(
 
   override fun get(): Settings = settings
 
-  override fun signal(): Long = settingsFile.lastModified()
-
-  override fun calculate(): Settings {
-    if (!settingsFile.canRead() && !settingsFile.canWrite()) {
-      throw RuntimeException(
-        "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
-      )
-    }
-
-    try {
-      return gson.fromJson(settingsFile.reader(), Settings::class.java)
-    } catch (e: JsonSyntaxException) {
-      logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
-      writeExampleSettings()
-      logger.i("But I'm still gonna crash so you can figure out the issue.")
-      throw e
-    }
-  }
+  override fun getLastUpdatedTimeMs(): Long = settingsFile.lastModified()
 
   /** Writes the default settings to an example file. */
   private fun writeExampleSettings() {
