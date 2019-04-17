@@ -2,7 +2,7 @@ package me.fru1t.qbtexporter.settings.impl
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import me.fru1t.common.kotlin.relay
+import me.fru1t.common.kotlin.lazyRelay
 import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
@@ -26,7 +26,7 @@ class SettingsManagerImpl @Inject constructor(
   }
 
   private val settingsFile: File = File(settingsFilePath + DEFAULT_SETTINGS_FILE_LOCATION)
-  private val settings: Settings by relay()
+  private val settings: Settings by lazyRelay()
 
   init {
     val settingsDir = File(settingsFilePath)

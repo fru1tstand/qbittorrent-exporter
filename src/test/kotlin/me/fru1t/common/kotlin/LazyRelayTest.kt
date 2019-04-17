@@ -3,9 +3,9 @@ package me.fru1t.common.kotlin
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-internal class RelayTest {
-  /** An implementation of a [Relayer] that returns the values within its fields. */
-  private class TestRelayer : Relayer<Int> {
+internal class LazyRelayTest {
+  /** An implementation of a [LazyRelayer] that returns the values within its fields. */
+  private class TestRelayer : LazyRelayer<Int> {
     var signalValue: Int = 0
     var calculateValue: Int = 0
 
@@ -22,7 +22,7 @@ internal class RelayTest {
   fun doesNotUpdateUntilFirstAccess() {
     var calculatedValue = 0
 
-    val subject: Int by relay({ 1 }) { calculatedValue++ }
+    val subject: Int by lazyRelay({ 1 }) { calculatedValue++ }
 
     assertThat(calculatedValue).isEqualTo(0)
   }
@@ -31,7 +31,7 @@ internal class RelayTest {
   fun nonUpdatingDelegate_doesNotCallProducer() {
     var calculatedValue = 0
 
-    val subject: Int by relay({ 1 }) { calculatedValue++ }
+    val subject: Int by lazyRelay({ 1 }) { calculatedValue++ }
 
     // Initial lazy load
     assertThat(subject).isEqualTo(0)
@@ -47,7 +47,7 @@ internal class RelayTest {
     var calculatedValue = 0
     var signalValue = 0
 
-    val subject: Int by relay({ signalValue }) { calculatedValue++ }
+    val subject: Int by lazyRelay({ signalValue }) { calculatedValue++ }
 
     assertThat(subject).isEqualTo(0)
 
@@ -59,7 +59,7 @@ internal class RelayTest {
   fun relayerExtensionMethod() {
     val relayer = TestRelayer()
 
-    val subject: Int by relayer.relay()
+    val subject: Int by relayer.lazyRelay()
 
     assertThat(subject).isEqualTo(relayer.calculateValue)
   }

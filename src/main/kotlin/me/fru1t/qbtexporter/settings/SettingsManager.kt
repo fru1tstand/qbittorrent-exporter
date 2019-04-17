@@ -1,10 +1,10 @@
 package me.fru1t.qbtexporter.settings
 
-import me.fru1t.common.kotlin.Relayer
+import me.fru1t.common.kotlin.LazyRelayer
 import javax.inject.Provider
 
 /** Methods to interface with the [Settings] for this exporter. */
-interface SettingsManager : Provider<Settings>, Relayer<Settings> {
+interface SettingsManager : Provider<Settings>, LazyRelayer<Settings> {
   /** Synchronously commits the settings to disk. */
   fun save()
 
