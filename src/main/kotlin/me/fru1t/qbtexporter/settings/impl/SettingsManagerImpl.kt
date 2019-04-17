@@ -2,6 +2,7 @@ package me.fru1t.qbtexporter.settings.impl
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import me.fru1t.common.kotlin.relay
 import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
@@ -25,48 +26,32 @@ class SettingsManagerImpl @Inject constructor(
   }
 
   private val settingsFile: File = File(settingsFilePath + DEFAULT_SETTINGS_FILE_LOCATION)
-  private var settings: Settings? = null
-  private var settingsFileLastModified: Long = 0
+  private val settings: Settings by relay()
 
   init {
     val settingsDir = File(settingsFilePath)
     if (!settingsDir.exists()) {
       settingsDir.mkdirs()
     }
+
+    // Write settings file if none exists
+    if (!settingsFile.exists()) {
+      logger.i("No settings file found, creating one.")
+      settingsFile.writeText(gson.toJson(Settings()))
+    } else {
+      logger.i("Settings found, will load from $DEFAULT_SETTINGS_FILE_LOCATION")
+    }
   }
 
   override fun save() {
-    // Do nothing if the settings haven't even been loaded
-    if (settings == null) {
-      return
-    }
-
-    settingsFile.writeText(gson.toJson(settings!!))
-    settingsFileLastModified = settingsFile.lastModified()
+    settingsFile.writeText(gson.toJson(settings))
   }
 
-  override fun get(): Settings {
-    if (settingsFile.lastModified() != settingsFileLastModified) {
-      logger.i("Settings have changed, reloading from disk.")
-      settings = null
-      settingsFileLastModified = settingsFile.lastModified()
-    }
+  override fun get(): Settings = settings
 
-    if (settings == null) {
-      if (!settingsFile.exists()) {
-        logger.i("No settings file found, creating one.")
-        settings = Settings()
-        save()
-      } else {
-        logger.i("Settings found, loading from $DEFAULT_SETTINGS_FILE_LOCATION")
-        loadSettingsFromFile()
-      }
-    }
+  override fun signal(): Long = settingsFile.lastModified()
 
-    return settings!!
-  }
-
-  private fun loadSettingsFromFile() {
+  override fun calculate(): Settings {
     if (!settingsFile.canRead() && !settingsFile.canWrite()) {
       throw RuntimeException(
         "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
@@ -74,7 +59,7 @@ class SettingsManagerImpl @Inject constructor(
     }
 
     try {
-      settings = gson.fromJson(settingsFile.reader(), Settings::class.java)
+      return gson.fromJson(settingsFile.reader(), Settings::class.java)
     } catch (e: JsonSyntaxException) {
       logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
       writeExampleSettings()

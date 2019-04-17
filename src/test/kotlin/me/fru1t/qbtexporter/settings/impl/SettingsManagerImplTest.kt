@@ -25,8 +25,7 @@ internal class SettingsManagerImplTest {
 
   private lateinit var gson: Gson
   private lateinit var manager: SettingsManagerImpl
-  @Mock
-  private lateinit var mockLogger: Logger
+  @Mock private lateinit var mockLogger: Logger
 
   @BeforeEach
   fun setUp() {
@@ -66,7 +65,7 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun get_loadsAgainIfSettingsFileLastModifiedChanges() {
+  fun get_loadsAgain_ifSettingsFileLastModifiedChanges() {
     // Assert initial state
     val defaultSettings = Settings()
     assertThat(manager.get().qbtSettings?.webUiAddress)
@@ -83,6 +82,26 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
+  fun get_doesNotLoadAgain_ifSettingsFileLastModifiedDoesNotChange() {
+    // Assert initial state
+    val defaultSettings = Settings()
+    assertThat(manager.get().qbtSettings?.webUiAddress)
+      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
+    println(SETTINGS_FILE.lastModified())
+
+    // Modify file, but don't update last modified
+    val originalLastModified = SETTINGS_FILE.lastModified()
+    val writtenSettings = Settings(qbtSettings = QbtSettings(webUiAddress = "test"))
+    SETTINGS_FILE.writeText(gson.toJson(writtenSettings))
+    SETTINGS_FILE.setLastModified(originalLastModified)
+
+    // Assert another get will NOT refresh from disk
+    println(SETTINGS_FILE.lastModified())
+    assertThat(manager.get().qbtSettings?.webUiAddress)
+      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
+  }
+
+  @Test
   fun get() {
     SETTINGS_FILE.writeText("{}")
 
@@ -94,13 +113,6 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun save_withoutLoading_doesNothing() {
-    manager.save()
-
-    assertThat(SETTINGS_FILE.exists()).isFalse()
-  }
-
-  @Test
   fun save() {
     SETTINGS_FILE.writeText("{}")
 
@@ -109,5 +121,33 @@ internal class SettingsManagerImplTest {
 
     assertThat(SETTINGS_FILE.exists()).isTrue()
     assertThat(SETTINGS_FILE.readText()).isNotEqualTo("{}")
+  }
+
+  @Test
+  fun signal() {
+    val testLastModified = 3000L
+
+    SETTINGS_FILE.writeText("")
+    SETTINGS_FILE.setLastModified(testLastModified)
+
+    assertThat(manager.signal()).isEqualTo(testLastModified)
+  }
+
+  @Test
+  fun calculate() {
+    // Assert initial state
+    val defaultSettings = Settings()
+    assertThat(manager.calculate().qbtSettings?.webUiAddress)
+      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
+
+    // Modify file, but don't update last modified
+    val originalLastModified = SETTINGS_FILE.lastModified()
+    val writtenSettings = Settings(qbtSettings = QbtSettings(webUiAddress = "test"))
+    SETTINGS_FILE.writeText(gson.toJson(writtenSettings))
+    SETTINGS_FILE.setLastModified(originalLastModified)
+
+    // Assert that even when the last modified was not changed, that we still load from disk
+    assertThat(manager.calculate().qbtSettings?.webUiAddress)
+      .isEqualTo(writtenSettings.qbtSettings!!.webUiAddress)
   }
 }
