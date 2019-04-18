@@ -1,6 +1,5 @@
 package me.fru1t.qbtexporter.collector
 
-import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
@@ -18,7 +17,7 @@ internal class CollectorSettingsUtilsTest {
 
     // Flatten to a list of just string->boolean pairs
     val flattenedResults = HashMap<String, Boolean>()
-    results.forEach { _, settings -> flattenedResults.putAll(settings) }
+    results.forEach { (_, settings) -> flattenedResults.putAll(settings) }
 
     // Remove collectors whose default setting is false (ie. what we expect)
     val testValues = ALL_COLLECTORS.toMutableList()
@@ -36,70 +35,12 @@ internal class CollectorSettingsUtilsTest {
   fun createDefaultSettings_allCollectorsDisabledByDefault() {
     val defaultSettings = CollectorSettingsUtils.createDefaultSettings()
 
-    defaultSettings.forEach { _, settings ->
-      settings.forEach { setting, value ->
+    defaultSettings.forEach { (_, settings) ->
+      settings.forEach { (setting, value) ->
         assertWithMessage("Expected default value of $setting to be false.")
           .that(value)
           .isFalse()
       }
     }
-  }
-
-  @Test
-  fun getEnabledCollectors_returnsEmptyList_whenNoMapPresent() {
-    assertThat(CollectorSettingsUtils.getEnabledCollectors(null))
-      .isEmpty()
-  }
-
-  @Test
-  fun getEnabledCollectors_returnAllCollectors_whenAllCollectorsAreEnabled() {
-    val settings = CollectorSettingsUtils.createDefaultSettings()
-    val enabledAllSettings = HashMap<String, Map<String, Boolean>>()
-    settings.forEach { category, settings ->
-      val enabledCategorySettings = HashMap<String, Boolean>()
-      settings.forEach { setting, _ -> enabledCategorySettings[setting] = true }
-      enabledAllSettings[category] = enabledCategorySettings
-    }
-
-    val result = CollectorSettingsUtils.getEnabledCollectors(enabledAllSettings)
-    val testValues = ALL_COLLECTORS.toMutableList()
-    testValues.removeIf { result.contains(it) }
-
-    assertWithMessage(
-      "Expected all collectors to be enabled, but found the following to be disabled:"
-    )
-      .that(testValues)
-      .isEmpty()
-  }
-
-  @Test
-  fun getEnabledCollectors_returnsArbitrarilyEnabledCollectors() {
-    val settings = mapOf(
-      Pair(
-        "serverState",
-        mapOf(
-          Pair(
-            CollectorSettingsUtils.getSettingsName(ServerStateCollector.ALL_TIME_UPLOAD_BYTES),
-            true
-          )
-        )
-      ),
-      Pair(
-        "torrents",
-        mapOf(
-          Pair(
-            CollectorSettingsUtils.getSettingsName(TorrentsCollector.COMPLETED_BYTES),
-            true
-          )
-        )
-      )
-    )
-    val result = CollectorSettingsUtils.getEnabledCollectors(settings)
-
-    assertThat(result)
-      .containsAllOf(
-        ServerStateCollector.ALL_TIME_UPLOAD_BYTES,
-        TorrentsCollector.COMPLETED_BYTES
-      )
   }
 }

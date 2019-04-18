@@ -8,23 +8,17 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
-import me.fru1t.qbtexporter.collector.MaindataCollector
 import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
 import me.fru1t.qbtexporter.exporter.ExporterServer
 import me.fru1t.qbtexporter.qbt.api.QbtApi
-import me.fru1t.qbtexporter.settings.SettingsManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /** Implementation of [ExporterServer]. */
 class ExporterServerImpl @Inject constructor(
   private val qbtApi: QbtApi,
-  private val settingsManager: SettingsManager
+  private val collectorSettingsUtils: CollectorSettingsUtils
 ) : ExporterServer {
-  private val collectors: List<MaindataCollector> by lazy {
-    CollectorSettingsUtils.getEnabledCollectors(
-      settingsManager.get().collectorSettings?.maindataCollectors)
-  }
   private val server: ApplicationEngine = embeddedServer(factory = Jetty, port = 9561) {
     routing {
       get("/") {
@@ -36,7 +30,7 @@ class ExporterServerImpl @Inject constructor(
       get("metrics") {
         val maindata = qbtApi.fetchMaindata()
         val metrics = ArrayList<String>()
-        collectors.forEach { collector ->
+        collectorSettingsUtils.getEnabledMaindataCollectors().forEach { collector ->
           metrics.add(collector.collect(maindata).toString())
         }
         call.respondText(
