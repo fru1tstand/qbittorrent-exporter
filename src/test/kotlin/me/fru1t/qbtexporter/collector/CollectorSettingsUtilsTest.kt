@@ -6,7 +6,7 @@ import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 import org.junit.jupiter.api.Test
 
-internal class CollectorSettingsHelperTest {
+internal class CollectorSettingsUtilsTest {
   private companion object {
     private val ALL_COLLECTORS: List<MaindataCollector> =
       listOf(*ServerStateCollector.values(), *TorrentsCollector.values())
@@ -14,7 +14,7 @@ internal class CollectorSettingsHelperTest {
 
   @Test
   fun createDefaultSettings_containsAllCollectors() {
-    val results = CollectorSettingsHelper.createDefaultSettings()
+    val results = CollectorSettingsUtils.createDefaultSettings()
 
     // Flatten to a list of just string->boolean pairs
     val flattenedResults = HashMap<String, Boolean>()
@@ -22,7 +22,7 @@ internal class CollectorSettingsHelperTest {
 
     // Remove collectors whose default setting is false (ie. what we expect)
     val testValues = ALL_COLLECTORS.toMutableList()
-    testValues.removeIf { flattenedResults[CollectorSettingsHelper.getSettingsName(it)] == false }
+    testValues.removeIf { flattenedResults[CollectorSettingsUtils.getSettingsName(it)] == false }
 
     assertWithMessage(
       "Expected all collectors to have a default settings value, but found the following to be " +
@@ -34,7 +34,7 @@ internal class CollectorSettingsHelperTest {
 
   @Test
   fun createDefaultSettings_allCollectorsDisabledByDefault() {
-    val defaultSettings = CollectorSettingsHelper.createDefaultSettings()
+    val defaultSettings = CollectorSettingsUtils.createDefaultSettings()
 
     defaultSettings.forEach { _, settings ->
       settings.forEach { setting, value ->
@@ -47,13 +47,13 @@ internal class CollectorSettingsHelperTest {
 
   @Test
   fun getEnabledCollectors_returnsEmptyList_whenNoMapPresent() {
-    assertThat(CollectorSettingsHelper.getEnabledCollectors(null))
+    assertThat(CollectorSettingsUtils.getEnabledCollectors(null))
       .isEmpty()
   }
 
   @Test
   fun getEnabledCollectors_returnAllCollectors_whenAllCollectorsAreEnabled() {
-    val settings = CollectorSettingsHelper.createDefaultSettings()
+    val settings = CollectorSettingsUtils.createDefaultSettings()
     val enabledAllSettings = HashMap<String, Map<String, Boolean>>()
     settings.forEach { category, settings ->
       val enabledCategorySettings = HashMap<String, Boolean>()
@@ -61,7 +61,7 @@ internal class CollectorSettingsHelperTest {
       enabledAllSettings[category] = enabledCategorySettings
     }
 
-    val result = CollectorSettingsHelper.getEnabledCollectors(enabledAllSettings)
+    val result = CollectorSettingsUtils.getEnabledCollectors(enabledAllSettings)
     val testValues = ALL_COLLECTORS.toMutableList()
     testValues.removeIf { result.contains(it) }
 
@@ -79,7 +79,7 @@ internal class CollectorSettingsHelperTest {
         "serverState",
         mapOf(
           Pair(
-            CollectorSettingsHelper.getSettingsName(ServerStateCollector.ALL_TIME_UPLOAD_BYTES),
+            CollectorSettingsUtils.getSettingsName(ServerStateCollector.ALL_TIME_UPLOAD_BYTES),
             true
           )
         )
@@ -88,13 +88,13 @@ internal class CollectorSettingsHelperTest {
         "torrents",
         mapOf(
           Pair(
-            CollectorSettingsHelper.getSettingsName(TorrentsCollector.COMPLETED_BYTES),
+            CollectorSettingsUtils.getSettingsName(TorrentsCollector.COMPLETED_BYTES),
             true
           )
         )
       )
     )
-    val result = CollectorSettingsHelper.getEnabledCollectors(settings)
+    val result = CollectorSettingsUtils.getEnabledCollectors(settings)
 
     assertThat(result)
       .containsAllOf(

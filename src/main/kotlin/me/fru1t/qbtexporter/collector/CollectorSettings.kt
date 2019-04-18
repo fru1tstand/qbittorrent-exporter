@@ -6,5 +6,5 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
 data class CollectorSettings(
   @Documentation("Toggles for the qBittorrent maindata collectors.")
   var maindataCollectors: Map<String, Map<String, Boolean>>? =
-    CollectorSettingsHelper.createDefaultSettings()
+    CollectorSettingsUtils.createDefaultSettings()
 )

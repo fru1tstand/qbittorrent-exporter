@@ -4,7 +4,7 @@ import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 
 /** Static methods for managing collector settings. */
-object CollectorSettingsHelper {
+object CollectorSettingsUtils {
   /** Maps a list of maindata collectors to their settings category. */
   private val maindataCollectorSettingsMap: Map<String, Array<out MaindataCollector>> =
       mapOf(
