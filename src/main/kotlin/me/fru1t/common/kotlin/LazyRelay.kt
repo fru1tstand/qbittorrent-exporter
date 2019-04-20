@@ -9,10 +9,6 @@ import kotlin.reflect.KProperty
 fun <T> lazyRelay(signal: () -> Any?, calculate: () -> T): LazyRelay<T> =
   LazyRelay(signal = signal, calculate = calculate)
 
-/** Method entry point for property delegation `by LazyRelayer.lazyRelay`. See [LazyRelay]. */
-fun <T> LazyRelayer<T>.lazyRelay(): LazyRelay<T> =
-  lazyRelay(signal = this::signal, calculate = this::calculate)
-
 /**
  * A field that acts like a lazy loaded field, but also re-[calculate]s its value when it detects
  * that a [signal] value has changed. Detection is done upon field accessing, so while a [signal]
@@ -47,19 +43,4 @@ class LazyRelay<T>(private val signal: () -> Any?, private val calculate: () -> 
 
   /** Allows instances of this object to be used in property delegation (ie. `by lazyRelay`). */
   operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
-}
-
-/**
- * Denotes that a class will [calculate] new [T] values when a [signal] output changes. See
- * [LazyRelay].
- */
-interface LazyRelayer<T> {
-  /**
-   * Produces a value that, if changed, will cause the next access to the [LazyRelay] to be
-   * re-[calculate]ed.
-   */
-  fun signal(): Any?
-
-  /** Produces the real output value for the [LazyRelay]. */
-  fun calculate(): T
 }

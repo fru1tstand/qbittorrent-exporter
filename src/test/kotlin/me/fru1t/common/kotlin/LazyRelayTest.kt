@@ -4,24 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 internal class LazyRelayTest {
-  /** An implementation of a [LazyRelayer] that returns the values within its fields. */
-  private class TestRelayer : LazyRelayer<Int> {
-    var signalValue: Int = 0
-    var calculateValue: Int = 0
-
-    override fun signal(): Any? {
-      return signalValue
-    }
-
-    override fun calculate(): Int {
-      return calculateValue
-    }
-  }
-
   @Test
   fun doesNotUpdateUntilFirstAccess() {
     var calculatedValue = 0
 
+    @Suppress("UNUSED_VARIABLE")
     val subject: Int by lazyRelay({ 1 }) { calculatedValue++ }
 
     assertThat(calculatedValue).isEqualTo(0)
@@ -53,14 +40,5 @@ internal class LazyRelayTest {
 
     signalValue++
     assertThat(subject).isEqualTo(1)
-  }
-
-  @Test
-  fun relayerExtensionMethod() {
-    val relayer = TestRelayer()
-
-    val subject: Int by relayer.lazyRelay()
-
-    assertThat(subject).isEqualTo(relayer.calculateValue)
   }
 }
