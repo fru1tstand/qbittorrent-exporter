@@ -2,7 +2,6 @@ package me.fru1t.qbtexporter.settings.impl
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import me.fru1t.common.kotlin.lazyRelay
 import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
@@ -17,7 +16,7 @@ class SettingsManagerImpl @Inject constructor(
   @Named(NAMED_FILE_PATH) private val settingsFilePath: String,
   private val gson: Gson,
   private val logger: Logger
-) : SettingsManager {
+) : SettingsManager() {
   internal companion object {
     internal const val NAMED_FILE_PATH = "SettingsManagerImpl_filePath"
 
@@ -26,22 +25,6 @@ class SettingsManagerImpl @Inject constructor(
   }
 
   private val settingsFile: File = File(settingsFilePath + DEFAULT_SETTINGS_FILE_LOCATION)
-  private val settings: Settings by lazyRelay(signal = this::getLastUpdatedTimeMs) {
-    if (!settingsFile.canRead() && !settingsFile.canWrite()) {
-      throw RuntimeException(
-        "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
-      )
-    }
-
-    try {
-      gson.fromJson(settingsFile.reader(), Settings::class.java)
-    } catch (e: JsonSyntaxException) {
-      logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
-      writeExampleSettings()
-      logger.i("But I'm still gonna crash so you can figure out the issue.")
-      throw e
-    }
-  }
 
   init {
     val settingsDir = File(settingsFilePath)
@@ -59,12 +42,31 @@ class SettingsManagerImpl @Inject constructor(
   }
 
   override fun save() {
-    settingsFile.writeText(gson.toJson(settings))
+    settingsFile.writeText(gson.toJson(relay().get()))
   }
 
-  override fun get(): Settings = settings
+  override fun get(): Settings = relay().get()
 
   override fun getLastUpdatedTimeMs(): Long = settingsFile.lastModified()
+
+  override fun signal(): Any? = getLastUpdatedTimeMs()
+
+  override fun calculate(): Settings {
+    if (!settingsFile.canRead() && !settingsFile.canWrite()) {
+      throw RuntimeException(
+        "I need read and write access to $DEFAULT_SETTINGS_FILE_LOCATION to work."
+      )
+    }
+
+    try {
+      return gson.fromJson(settingsFile.reader(), Settings::class.java)
+    } catch (e: JsonSyntaxException) {
+      logger.e("Failed to read the settings file at $DEFAULT_SETTINGS_FILE_LOCATION.")
+      writeExampleSettings()
+      logger.i("But I'm still gonna crash so you can figure out the issue.")
+      throw e
+    }
+  }
 
   /** Writes the default settings to an example file. */
   private fun writeExampleSettings() {

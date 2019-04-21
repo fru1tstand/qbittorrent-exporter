@@ -43,19 +43,32 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun get_noExistingSettings_writesDefaultSettings() {
-    manager.get()
+  fun constructor_writesDefaultSettings() {
+    // Set up instantiates settings manager already
 
     assertThat(SETTINGS_FILE.exists()).isTrue()
     assertThat(SETTINGS_FILE.readText()).isNotEmpty()
   }
 
   @Test
-  fun get_invalidFile_writesExampleSettingsFile() {
+  fun constructor_doesNotOverwriteExistingSettings() {
+    SETTINGS_FILE.writeText("{}")
+
+    // Re-instantiate
+    manager =
+      SettingsManagerImpl(gson = gson, logger = mockLogger, settingsFilePath = TESTING_DIRECTORY)
+
+    // Verify what we wrote wasn't overwritten
+    assertThat(SETTINGS_FILE.readText()).isEqualTo("{}")
+  }
+
+  @Test
+  fun relay_invalidFile_writesExampleSettingsFile() {
     SETTINGS_FILE.writeText("garbage { json")
 
+    // Make
     try {
-      manager.get()
+      manager.relay().get()
       assertWithMessage("Expected a JsonSyntaxException while decoding garbage json")
     } catch (e: JsonSyntaxException) {
       // Expected
@@ -65,10 +78,10 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun get_loadsAgain_ifSettingsFileLastModifiedChanges() {
+  fun relay_loadsAgain_ifSettingsFileLastModifiedChanges() {
     // Assert initial state
     val defaultSettings = Settings()
-    assertThat(manager.get().qbtSettings?.webUiAddress)
+    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
       .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
 
     // Modify file
@@ -77,15 +90,15 @@ internal class SettingsManagerImplTest {
     SETTINGS_FILE.setLastModified(SETTINGS_FILE.lastModified() + 1000)
 
     // Assert another get will refresh from disk
-    assertThat(manager.get().qbtSettings?.webUiAddress)
+    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
       .isEqualTo(writtenSettings.qbtSettings!!.webUiAddress)
   }
 
   @Test
-  fun get_doesNotLoadAgain_ifSettingsFileLastModifiedDoesNotChange() {
+  fun relay_doesNotLoadAgain_ifSettingsFileLastModifiedDoesNotChange() {
     // Assert initial state
     val defaultSettings = Settings()
-    assertThat(manager.get().qbtSettings?.webUiAddress)
+    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
       .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
 
     // Modify file, but don't update last modified
@@ -95,7 +108,7 @@ internal class SettingsManagerImplTest {
     SETTINGS_FILE.setLastModified(originalLastModified)
 
     // Assert another get will NOT refresh from disk
-    assertThat(manager.get().qbtSettings?.webUiAddress)
+    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
       .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
   }
 
@@ -114,7 +127,7 @@ internal class SettingsManagerImplTest {
   fun save() {
     SETTINGS_FILE.writeText("{}")
 
-    manager.get()
+    manager.relay().get()
     manager.save()
 
     assertThat(SETTINGS_FILE.exists()).isTrue()
@@ -122,7 +135,7 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun getLAstUpdatedTimeMs() {
+  fun getLastUpdatedTimeMs() {
     val testLastModified = 3000L
 
     SETTINGS_FILE.writeText("")
