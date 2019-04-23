@@ -3,6 +3,7 @@ package me.fru1t.common.kotlin
 /**
  * A class that will
  */
+@Deprecated("Use project-specific implementation")
 abstract class LazyRelayer<T> {
   private val value: LazyRelay<T> = LazyRelay(::signal, ::calculate)
 

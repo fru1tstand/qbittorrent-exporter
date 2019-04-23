@@ -6,6 +6,7 @@ import kotlin.reflect.KProperty
  * Method entry point for property delegation `by lazyRelay` on objects that don't extend
  * [LazyRelayer]. See [LazyRelay].
  */
+@Deprecated("Use project-specific implementation")
 fun <T> lazyRelay(signal: () -> Any?, calculate: () -> T): LazyRelay<T> =
   LazyRelay(signal = signal, calculate = calculate)
 
@@ -21,6 +22,7 @@ fun <T> lazyRelay(signal: () -> Any?, calculate: () -> T): LazyRelay<T> =
  * Note the terminology comes from electrical relays where a "low power" signal can control a "high
  * power" output.
  */
+@Deprecated("Use project-specific implementation")
 class LazyRelay<T>(private val signal: () -> Any?, private val calculate: () -> T) {
   private companion object {
     private object UninitializedValue
