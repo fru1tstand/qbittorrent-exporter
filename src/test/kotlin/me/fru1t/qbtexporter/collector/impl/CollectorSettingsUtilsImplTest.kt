@@ -2,10 +2,6 @@ package me.fru1t.qbtexporter.collector.impl
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import me.fru1t.qbtexporter.collector.CollectorSettings
 import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
@@ -13,7 +9,7 @@ import me.fru1t.qbtexporter.collector.CollectorSettingsUtils.Companion.getSettin
 import me.fru1t.qbtexporter.collector.MaindataCollector
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
-import me.fru1t.qbtexporter.logger.Logger
+import me.fru1t.qbtexporter.kotlin.testing.TestLazyRelay
 import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
 import org.junit.jupiter.api.BeforeEach
@@ -27,22 +23,19 @@ internal class CollectorSettingsUtilsImplTest {
       listOf(*ServerStateCollector.values(), *TorrentsCollector.values())
   }
 
-  @Mock private lateinit var mockLogger: Logger
   @Mock private lateinit var mockSettingsManager: SettingsManager
-  private lateinit var utils: CollectorSettingsUtilsImpl
 
   @BeforeEach
   fun setUp() {
     MockitoAnnotations.initMocks(this)
-    whenever(mockSettingsManager.get()).thenReturn(Settings())
-    utils = CollectorSettingsUtilsImpl(settingsManager = mockSettingsManager, logger = mockLogger)
+    whenever(mockSettingsManager.getSettingsRelay()).thenReturn(TestLazyRelay.of(Settings()))
   }
 
   @Test
   fun getEnabledMaindataCollectors_returnsEmptyList_whenNoMapPresent() {
-    whenever(mockSettingsManager.get()).thenReturn(Settings())
+    whenever(mockSettingsManager.getSettingsRelay()).thenReturn(TestLazyRelay.of(Settings()))
 
-    assertThat(utils.getEnabledMaindataCollectors())
+    assertThat(createUtils().getEnabledMaindataCollectors())
       .isEmpty()
   }
 
@@ -55,16 +48,18 @@ internal class CollectorSettingsUtilsImplTest {
       settings.forEach { (setting, _) -> enabledCategorySettings[setting] = true }
       maindataCollectorSettings[category] = enabledCategorySettings
     }
-    whenever(mockSettingsManager.get())
+    whenever(mockSettingsManager.getSettingsRelay())
       .thenReturn(
-        Settings(
-          collectorSettings = CollectorSettings(
-            maindataCollectors = maindataCollectorSettings
+        TestLazyRelay.of(
+          Settings(
+            collectorSettings = CollectorSettings(
+              maindataCollectors = maindataCollectorSettings
+            )
           )
         )
       )
 
-    val result = utils.getEnabledMaindataCollectors()
+    val result = createUtils().getEnabledMaindataCollectors()
     val testValues = ALL_MAINDATA_COLLECTORS.toMutableList()
     testValues.removeIf { result.contains(it) }
 
@@ -87,16 +82,18 @@ internal class CollectorSettingsUtilsImplTest {
         mapOf(Pair(getSettingsName(TorrentsCollector.COMPLETED_BYTES), true))
       )
     )
-    whenever(mockSettingsManager.get())
+    whenever(mockSettingsManager.getSettingsRelay())
       .thenReturn(
-        Settings(
-          collectorSettings = CollectorSettings(
-            maindataCollectors = maindataCollectors
+        TestLazyRelay.of(
+          Settings(
+            collectorSettings = CollectorSettings(
+              maindataCollectors = maindataCollectors
+            )
           )
         )
       )
 
-    val result = utils.getEnabledMaindataCollectors()
+    val result = createUtils().getEnabledMaindataCollectors()
 
     assertThat(result)
       .containsAllOf(
@@ -105,32 +102,6 @@ internal class CollectorSettingsUtilsImplTest {
       )
   }
 
-  @Test
-  fun getEnabledMaindataCollectors_doesNotUpdateWhenSettingsDoesNotUpdate() {
-    whenever(mockSettingsManager.getLastUpdatedTimeMs()).thenReturn(1)
-
-    // Seed initial get with an empty list
-    whenever(mockSettingsManager.get()).thenReturn(Settings())
-    assertThat(utils.getEnabledMaindataCollectors()).isEmpty()
-    verify(mockSettingsManager, times(1)).get()
-    clearInvocations(mockSettingsManager)
-
-    // A second fetch wouldn't poll the settings
-    utils.getEnabledMaindataCollectors()
-    verify(mockSettingsManager, never()).get()
-  }
-
-  @Test
-  fun getEnabledMaindataCollectors_updatesWhenSettingsUpdates() {
-    // Seed initial get
-    whenever(mockSettingsManager.getLastUpdatedTimeMs()).thenReturn(1)
-    assertThat(utils.getEnabledMaindataCollectors()).isEmpty()
-    verify(mockSettingsManager, times(1)).get()
-    clearInvocations(mockSettingsManager)
-
-    // Simulate settings "update" which causes another settings get.
-    whenever(mockSettingsManager.getLastUpdatedTimeMs()).thenReturn(2)
-    utils.getEnabledMaindataCollectors()
-    verify(mockSettingsManager, times(1)).get()
-  }
+  private fun createUtils(): CollectorSettingsUtilsImpl =
+    CollectorSettingsUtilsImpl(settingsManager = mockSettingsManager)
 }

@@ -4,7 +4,8 @@ import me.fru1t.qbtexporter.kotlin.LazyRelay
 
 /** Implementation of [LazyRelay]. */
 class LazyRelayImpl<T>(
-  private val signal: () -> Any?, private val calculate: () -> T
+  private val signal: () -> Any?,
+  private val calculate: () -> T
 ) : LazyRelay<T> {
   private companion object {
     private object UninitializedValue

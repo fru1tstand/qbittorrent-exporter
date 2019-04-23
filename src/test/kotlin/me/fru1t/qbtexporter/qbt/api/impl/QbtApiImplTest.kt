@@ -9,6 +9,7 @@ import io.ktor.client.engine.mock.MockHttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.io.ByteReadChannel
+import me.fru1t.qbtexporter.kotlin.testing.TestLazyRelay
 import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.settings.Settings
@@ -33,7 +34,7 @@ internal class QbtApiImplTest {
   @BeforeEach
   fun setUp() {
     MockitoAnnotations.initMocks(this)
-    whenever(mockSettingsManager.get()).thenReturn(TEST_SETTINGS)
+    whenever(mockSettingsManager.getSettingsRelay()).thenReturn(TestLazyRelay.of(TEST_SETTINGS))
     gson = Gson()
 
     val mockHttpEngine = MockEngine {

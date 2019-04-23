@@ -5,8 +5,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.response.readText
 import kotlinx.coroutines.runBlocking
+import me.fru1t.qbtexporter.kotlin.LazyRelay
 import me.fru1t.qbtexporter.qbt.api.QbtApi
 import me.fru1t.qbtexporter.qbt.response.Maindata
+import me.fru1t.qbtexporter.settings.Settings
 import me.fru1t.qbtexporter.settings.SettingsManager
 import javax.inject.Inject
 
@@ -20,12 +22,14 @@ class QbtApiImpl @Inject constructor(
     const val MAINDATA_PATH = "/api/v2/sync/maindata"
   }
 
-  private val webUiAddress: String = settingsManager.get().qbtSettings!!.webUiAddress!!
-  private val maindataFullPath: String = webUiAddress + MAINDATA_PATH
+  private val settingsRelay: LazyRelay<Settings> = settingsManager.getSettingsRelay()
 
   override fun fetchMaindata(): Maindata {
     return gson.fromJson(
-      runBlocking { httpClient.call(maindataFullPath).response.readText() },
+      runBlocking {
+        httpClient.call(settingsRelay.poll().qbtSettings?.webUiAddress + MAINDATA_PATH)
+          .response.readText()
+      },
       Maindata::class.java
     )
   }

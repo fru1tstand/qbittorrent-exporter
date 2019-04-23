@@ -4,8 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.verify
+import me.fru1t.qbtexporter.kotlin.LazyRelayFactory
 import me.fru1t.qbtexporter.logger.Logger
-import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.Settings
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -25,14 +27,23 @@ internal class SettingsManagerImplTest {
 
   private lateinit var gson: Gson
   private lateinit var manager: SettingsManagerImpl
+
   @Mock private lateinit var mockLogger: Logger
+  @Mock private lateinit var mockLazyRelayFactory: LazyRelayFactory
+  private val relayCalculateCaptor = argumentCaptor<() -> Settings>()
+  private val relaySignalCaptor = argumentCaptor<() -> Any?>()
 
   @BeforeEach
   fun setUp() {
     MockitoAnnotations.initMocks(this)
     gson = Gson()
     manager =
-      SettingsManagerImpl(gson = gson, logger = mockLogger, settingsFilePath = TESTING_DIRECTORY)
+      SettingsManagerImpl(
+        gson = gson,
+        logger = mockLogger,
+        settingsFilePath = TESTING_DIRECTORY,
+        lazyRelayFactory = mockLazyRelayFactory
+      )
   }
 
   @AfterEach
@@ -56,7 +67,12 @@ internal class SettingsManagerImplTest {
 
     // Re-instantiate
     manager =
-      SettingsManagerImpl(gson = gson, logger = mockLogger, settingsFilePath = TESTING_DIRECTORY)
+      SettingsManagerImpl(
+        gson = gson,
+        logger = mockLogger,
+        settingsFilePath = TESTING_DIRECTORY,
+        lazyRelayFactory = mockLazyRelayFactory
+      )
 
     // Verify what we wrote wasn't overwritten
     assertThat(SETTINGS_FILE.readText()).isEqualTo("{}")
@@ -64,11 +80,13 @@ internal class SettingsManagerImplTest {
 
   @Test
   fun relay_invalidFile_writesExampleSettingsFile() {
+    verify(mockLazyRelayFactory).create(relaySignalCaptor.capture(), relayCalculateCaptor.capture())
+
     SETTINGS_FILE.writeText("garbage { json")
 
     // Make
     try {
-      manager.relay().get()
+      relayCalculateCaptor.firstValue()
       assertWithMessage("Expected a JsonSyntaxException while decoding garbage json")
     } catch (e: JsonSyntaxException) {
       // Expected
@@ -78,69 +96,14 @@ internal class SettingsManagerImplTest {
   }
 
   @Test
-  fun relay_loadsAgain_ifSettingsFileLastModifiedChanges() {
-    // Assert initial state
-    val defaultSettings = Settings()
-    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
-      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
+  fun relay_signaledOnSettingsFileLastModified() {
+    verify(mockLazyRelayFactory).create(relaySignalCaptor.capture(), relayCalculateCaptor.capture())
 
-    // Modify file
-    val writtenSettings = Settings(qbtSettings = QbtSettings(webUiAddress = "test"))
-    SETTINGS_FILE.writeText(gson.toJson(writtenSettings))
-    SETTINGS_FILE.setLastModified(SETTINGS_FILE.lastModified() + 1000)
+    assertThat(relaySignalCaptor.firstValue()).isEqualTo(SETTINGS_FILE.lastModified())
+    assertThat(gson.toJson(relayCalculateCaptor.firstValue())).isEqualTo(SETTINGS_FILE.readText())
 
-    // Assert another get will refresh from disk
-    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
-      .isEqualTo(writtenSettings.qbtSettings!!.webUiAddress)
-  }
+    SETTINGS_FILE.setLastModified(SETTINGS_FILE.lastModified() + 3000)
 
-  @Test
-  fun relay_doesNotLoadAgain_ifSettingsFileLastModifiedDoesNotChange() {
-    // Assert initial state
-    val defaultSettings = Settings()
-    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
-      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
-
-    // Modify file, but don't update last modified
-    val originalLastModified = SETTINGS_FILE.lastModified()
-    val writtenSettings = Settings(qbtSettings = QbtSettings(webUiAddress = "test"))
-    SETTINGS_FILE.writeText(gson.toJson(writtenSettings))
-    SETTINGS_FILE.setLastModified(originalLastModified)
-
-    // Assert another get will NOT refresh from disk
-    assertThat(manager.relay().get().qbtSettings?.webUiAddress)
-      .isEqualTo(defaultSettings.qbtSettings?.webUiAddress)
-  }
-
-  @Test
-  fun get() {
-    SETTINGS_FILE.writeText("{}")
-
-    val settings = manager.get()
-
-    assertThat(settings).isInstanceOf(Settings::class.java)
-    assertThat(SETTINGS_FILE.exists()).isTrue()
-    assertThat(SETTINGS_FILE.readText()).isEqualTo("{}")
-  }
-
-  @Test
-  fun save() {
-    SETTINGS_FILE.writeText("{}")
-
-    manager.relay().get()
-    manager.save()
-
-    assertThat(SETTINGS_FILE.exists()).isTrue()
-    assertThat(SETTINGS_FILE.readText()).isNotEqualTo("{}")
-  }
-
-  @Test
-  fun getLastUpdatedTimeMs() {
-    val testLastModified = 3000L
-
-    SETTINGS_FILE.writeText("")
-    SETTINGS_FILE.setLastModified(testLastModified)
-
-    assertThat(manager.getLastUpdatedTimeMs()).isEqualTo(testLastModified)
+    assertThat(relaySignalCaptor.firstValue()).isEqualTo(SETTINGS_FILE.lastModified())
   }
 }

@@ -6,6 +6,8 @@ import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
 import me.fru1t.qbtexporter.collector.impl.CollectorSettingsUtilsImpl
 import me.fru1t.qbtexporter.exporter.ExporterServer
 import me.fru1t.qbtexporter.exporter.impl.ExporterServerImpl
+import me.fru1t.qbtexporter.kotlin.LazyRelayFactory
+import me.fru1t.qbtexporter.kotlin.impl.LazyRelayFactoryImpl
 import me.fru1t.qbtexporter.qbt.api.QbtApi
 import me.fru1t.qbtexporter.qbt.api.impl.QbtApiImpl
 import me.fru1t.qbtexporter.settings.SettingsManager
@@ -35,4 +37,8 @@ interface QbtExporterInterfacesModule {
   @Binds
   @Singleton
   fun bindCollectorSettingsUtils(impl: CollectorSettingsUtilsImpl): CollectorSettingsUtils
+
+  @Binds
+  @Singleton
+  fun bindLazyRelayFactory(impl: LazyRelayFactoryImpl): LazyRelayFactory
 }
