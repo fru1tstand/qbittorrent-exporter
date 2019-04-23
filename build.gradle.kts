@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.jvm.tasks.Jar
 
 group = "me.fru1t"
-version = "0.1-dev"
+version = "0.9-dev"
 
 
 plugins {
@@ -45,6 +46,7 @@ dependencies {
     implementation(ktor("server-core"))
     implementation(ktor("server-jetty"))
     implementation("org.slf4j:slf4j-simple:1.7.26")
+    implementation("javax.inject:javax.inject:1")
 
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
@@ -73,6 +75,18 @@ tasks {
         testLogging {
             events("passed", "skipped", "failed")
         }
+    }
+    "fatJar"(Jar::class) {
+        baseName = "${project.name}-fat"
+        manifest {
+            attributes["Implementation-Title"] = "qBittorrent Exporter"
+            attributes["Implementation-Version"] = version
+            attributes["Main-Class"] = "me.fru1t.qbtexporter.QbtExporterKt"
+        }
+        from(configurations.runtimeClasspath.map {
+            if (it.isDirectory) it else zipTree(it) }
+        )
+        with(tasks["jar"] as CopySpec)
     }
     Unit
 }
