@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Run lint
-echo "./gradlew lintKotlin"
-./gradlew lintKotlin
+echo "./gradlew formatKotlin"
+./gradlew formatKotlin
 if [ $? -ne 0 ] ; then
   echo
-  echo "\n\n\033[1;31mFailed kotlin lint check. You may run './gradlew formatKotlin' to automatically format kotlin,\nor check above output for individual errors.\033[0m\n\n"
+  echo "\n\n\033[1;31mFailed kotlin format. Please check above for errors. \033[0m\n\n"
   exit 1
 fi
 
