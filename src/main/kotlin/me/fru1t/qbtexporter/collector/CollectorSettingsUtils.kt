@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.collector
 
+import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 
@@ -10,7 +11,8 @@ interface CollectorSettingsUtils {
     val maindataCollectorSettingsMap: Map<String, Array<out MaindataCollector>> =
       mapOf(
         Pair("serverState", ServerStateCollector.values()),
-        Pair("torrents", TorrentsCollector.values())
+        Pair("torrents", TorrentsCollector.values()),
+        Pair("aggregateTorrent", AggregateTorrentCollector.values())
       )
 
     /** Returns the [collector]'s setting name. */
