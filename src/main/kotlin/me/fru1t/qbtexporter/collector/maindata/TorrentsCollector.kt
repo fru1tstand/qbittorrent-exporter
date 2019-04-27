@@ -7,6 +7,7 @@ import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 
+/** A set of collectors that transforms [Maindata.torrents] into labelled metrics per torrent. */
 enum class TorrentsCollector(
   help: String,
   metricType: MetricType,

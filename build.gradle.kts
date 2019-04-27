@@ -2,8 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.jvm.tasks.Jar
 
 group = "me.fru1t"
-version = "0.9-dev"
-
+version = "0.9.0-dev"
 
 plugins {
     application
