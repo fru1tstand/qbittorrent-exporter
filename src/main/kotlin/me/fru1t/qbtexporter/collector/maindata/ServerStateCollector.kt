@@ -9,7 +9,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.ServerState
 
 /** A set of collectors that transform [Maindata.serverState] fields into metrics. */
 enum class ServerStateCollector(
-  help: String,
+  val help: String,
   metricType: MetricType,
   private val update: (ServerState?) -> Number?
 ) : MaindataCollector {

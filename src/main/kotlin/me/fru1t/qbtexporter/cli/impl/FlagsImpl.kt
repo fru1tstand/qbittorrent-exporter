@@ -1,6 +1,10 @@
 package me.fru1t.qbtexporter.cli.impl
 
 import me.fru1t.qbtexporter.cli.Flags
+import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
+import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector
+import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
+import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 import me.fru1t.qbtexporter.dagger.QbtExporterComponent
 import me.fru1t.qbtexporter.logger.Logger
 import javax.inject.Inject
@@ -26,6 +30,10 @@ class FlagsImpl @Inject constructor(
       "--help" -> {
         logHelp()
       }
+      "-c",
+      "--collectors" -> {
+        logCollectors()
+      }
       else -> {
         logHelp("Unknown flag ${args[0]}.")
       }
@@ -33,13 +41,31 @@ class FlagsImpl @Inject constructor(
     return true
   }
 
+  private fun logCollectors() {
+    val output = StringBuilder("\nCollectors (as they appear in settings)\n")
+    output.append("  Server State\n")
+    ServerStateCollector.values().forEach {
+      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+    }
+    output.append("  Torrents\n")
+    TorrentsCollector.values().forEach {
+      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+    }
+    output.append("  Aggregate Torrents\n")
+    AggregateTorrentCollector.values().forEach {
+      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+    }
+    logger.i(output.toString())
+  }
+
   private fun logHelp(error: String? = null) {
     error?.let { logger.w("\n$it") }
     logger.i("\n" +
         "Usage: exporter.jar [flag]\n" +
         "[flag]\n" +
-        "  <none>       Starts the exporter normally.\n" +
-        "  -h|--help    Prints this help text.\n"
+        "  <none>           Starts the exporter normally.\n" +
+        "  -h|--help        Prints this help text.\n" +
+        "  -c|--collectors  Prints this help text.\n"
     )
   }
 }

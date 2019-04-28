@@ -9,7 +9,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 
 /** A set of collectors that transforms [Maindata.torrents] into labelled metrics per torrent. */
 enum class TorrentsCollector(
-  help: String,
+  val help: String,
   metricType: MetricType,
   private val update: (Map<String, Torrent>) -> Map<Map<String, String>, Number?>
 ) : MaindataCollector {

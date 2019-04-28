@@ -49,6 +49,16 @@ internal class FlagsImplTest {
     assertThat(it).contains("Usage: exporter.jar")
   }
 
+  @Test
+  fun handle_collectors() = verifyHandle("--collectors") {
+    assertThat(it).contains("Collectors (as they appear in settings)")
+  }
+
+  @Test
+  fun handle_c() = verifyHandle("-c") {
+    assertThat(it).contains("Collectors (as they appear in settings)")
+  }
+
   /**
    * Verifies that by passing [flag] into the cli, `handle` will return `true`, and the information
    * output of the logger will conform to [outputValidation].

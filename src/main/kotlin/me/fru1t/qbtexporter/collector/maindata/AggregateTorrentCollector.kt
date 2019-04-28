@@ -15,7 +15,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
  * metrics will no longer count in this collector.
  */
 enum class AggregateTorrentCollector(
-  help: String,
+  val help: String,
   metricType: MetricType,
   private val update: (Collection<Torrent>) -> Number?
 ) : MaindataCollector {
