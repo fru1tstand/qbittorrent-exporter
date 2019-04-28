@@ -2,6 +2,8 @@ package me.fru1t.qbtexporter.dagger
 
 import dagger.Binds
 import dagger.Module
+import me.fru1t.qbtexporter.cli.Flags
+import me.fru1t.qbtexporter.cli.impl.FlagsImpl
 import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
 import me.fru1t.qbtexporter.collector.impl.CollectorSettingsUtilsImpl
 import me.fru1t.qbtexporter.exporter.ExporterServer
@@ -41,4 +43,8 @@ interface QbtExporterInterfacesModule {
   @Binds
   @Singleton
   fun bindLazyRelayFactory(impl: LazyRelayFactoryImpl): LazyRelayFactory
+
+  @Binds
+  @Singleton
+  fun bindFlags(impl: FlagsImpl): Flags
 }

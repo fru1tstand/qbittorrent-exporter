@@ -34,9 +34,9 @@ class FlagsImpl @Inject constructor(
   }
 
   private fun logHelp(error: String? = null) {
-    error?.let { logger.w(it) }
-    logger.i("" +
-        "Flag usage: exporter.jar [flag]\n" +
+    error?.let { logger.w("\n$it") }
+    logger.i("\n" +
+        "Usage: exporter.jar [flag]\n" +
         "[flag]\n" +
         "  <none>       Starts the exporter normally.\n" +
         "  -h|--help    Prints this help text.\n"

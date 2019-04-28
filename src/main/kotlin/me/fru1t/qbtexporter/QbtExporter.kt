@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter
 
+import me.fru1t.qbtexporter.cli.Flags
 import me.fru1t.qbtexporter.dagger.DaggerQbtExporterComponent
 import me.fru1t.qbtexporter.exporter.ExporterServer
 import me.fru1t.qbtexporter.logger.Logger
@@ -14,9 +15,15 @@ fun main(args: Array<String>) {
 
 class QbtExporter @Inject constructor(
   private val exporterServer: ExporterServer,
-  private val logger: Logger
+  private val logger: Logger,
+  private val flags: Flags
 ) {
   fun start(cdl: CountDownLatch) {
+    // If there are flags, don't start the server
+    if (flags.handle()) {
+      return
+    }
+
     exporterServer.start()
     cdl.await()
     exporterServer.stop()

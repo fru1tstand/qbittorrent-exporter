@@ -41,12 +41,12 @@ internal class FlagsImplTest {
 
   @Test
   fun handle_help() = verifyHandle("--help") {
-    assertThat(it).contains("Flag usage: exporter.jar")
+    assertThat(it).contains("Usage: exporter.jar")
   }
 
   @Test
   fun handle_h() = verifyHandle("-h") {
-    assertThat(it).contains("Flag usage: exporter.jar")
+    assertThat(it).contains("Usage: exporter.jar")
   }
 
   /**

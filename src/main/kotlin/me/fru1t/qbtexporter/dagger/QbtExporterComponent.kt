@@ -20,8 +20,7 @@ interface QbtExporterComponent {
   @Component.Builder
   interface Builder {
     @BindsInstance
-    @Named(CLI_ARGS_NAME)
-    fun provideCliArgs(args: Array<String>): Builder
+    fun provideCliArgs(@Named(CLI_ARGS_NAME) args: Array<String>): Builder
 
     fun build(): QbtExporterComponent
   }
