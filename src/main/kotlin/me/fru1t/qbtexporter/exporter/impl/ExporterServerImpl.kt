@@ -11,15 +11,26 @@ import io.ktor.server.jetty.Jetty
 import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
 import me.fru1t.qbtexporter.exporter.ExporterServer
 import me.fru1t.qbtexporter.qbt.api.QbtApi
+import me.fru1t.qbtexporter.settings.SettingsManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /** Implementation of [ExporterServer]. */
 class ExporterServerImpl @Inject constructor(
   private val qbtApi: QbtApi,
-  private val collectorSettingsUtils: CollectorSettingsUtils
+  private val collectorSettingsUtils: CollectorSettingsUtils,
+  settingsManager: SettingsManager
 ) : ExporterServer {
-  private val server: ApplicationEngine = embeddedServer(factory = Jetty, port = 9561) {
+  private companion object {
+    private const val DEFAULT_PORT = 9561
+    private const val DEFAULT_HOST = "0.0.0.0"
+  }
+
+  private val server: ApplicationEngine = embeddedServer(
+    factory = Jetty,
+    port = settingsManager.getSettingsRelay().poll().exporterServerSettings?.port ?: DEFAULT_PORT,
+    host = settingsManager.getSettingsRelay().poll().exporterServerSettings?.host ?: DEFAULT_HOST
+  ) {
     routing {
       get("/") {
         call.respondText(

@@ -1,6 +1,7 @@
 package me.fru1t.qbtexporter.settings
 
 import me.fru1t.qbtexporter.collector.CollectorSettings
+import me.fru1t.qbtexporter.exporter.ExporterServerSettings
 import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation
 
@@ -22,7 +23,12 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
  *   settings).
  */
 data class Settings(
-  @Documentation("qBittorrent-specific settings like web ui path.")
+  @Documentation(
+    "Exporter server settings like which host and port to serve requests on. Changes to these " +
+        "settings requires an application restart.")
+  var exporterServerSettings: ExporterServerSettings? = ExporterServerSettings(),
+
+  @Documentation("qBittorrent settings like web ui path.")
   var qbtSettings: QbtSettings? = QbtSettings(),
 
   @Documentation("Collector settings like which metrics are exported.")
