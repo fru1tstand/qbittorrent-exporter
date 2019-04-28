@@ -47,6 +47,19 @@ internal class MultiMetricTest {
   }
 
   @Test
+  fun toString_withNoMetrics_producesNothing() {
+    val multiMetric =
+      MultiMetric(
+        metrics = mapOf(),
+        name = TEST_METRIC_NAME,
+        help = TEST_METRIC_HELP,
+        type = TEST_METRIC_TYPE
+      )
+
+    assertThat(multiMetric.toString()).isEmpty()
+  }
+
+  @Test
   fun invalidLabelName_throwsIllegalArgumentException() {
     val metrics = mapOf(Pair(mapOf(Pair("invalid name", "value")), 1.0))
     try {

@@ -60,6 +60,15 @@ internal class MetricTest {
     }
   }
 
+  @Test
+  fun emptyInternalMetrics_producesNothing() {
+    val metric = object : Metric(name = "test", help = "test help", type = TEST_METRIC_TYPE) {
+      override fun getAllInternalMetrics(): String = ""
+    }
+
+    assertThat(metric.toString()).isEmpty()
+  }
+
   /** Creates a new metric and tests its output against the expected metric value. */
   private fun assertToString(value: Number?, expectedValue: String) {
     val metric =

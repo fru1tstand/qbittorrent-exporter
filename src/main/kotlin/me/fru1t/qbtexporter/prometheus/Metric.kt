@@ -27,6 +27,11 @@ abstract class Metric(
     fun createInternalMetric(name: String, value: Number?): String = "$name ${value ?: 0}"
   }
 
+  /** Pre-computed help and type comment headers for prometheus export. */
+  private val metricHeader = "" +
+      HELP_TEMPLATE.format(name, help) + "\n" +
+      TYPE_TEMPLATE.format(name, type.name.toLowerCase()) + "\n"
+
   init {
     // Validate name
     if (!isValidIdentifier(name)) {
@@ -42,10 +47,13 @@ abstract class Metric(
    */
   protected abstract fun getAllInternalMetrics(): String
 
-  override fun toString(): String = "" +
-      HELP_TEMPLATE.format(name, help) + "\n" +
-      TYPE_TEMPLATE.format(name, type.name.toLowerCase()) + "\n" +
-      getAllInternalMetrics()
+  /**
+   * Returns the full metric string prometheus looks for including help and metric type comments.
+   *
+   * This method returns an empty string if no internal metrics are generated.
+   */
+  override fun toString(): String =
+    getAllInternalMetrics().let { if (it.isBlank()) "" else metricHeader + it }
 
   /** Returns whether or not [name] is a valid prometheus metric name or label. */
   protected fun isValidIdentifier(name: String) = NAMING_REGEX.matcher(name).matches()

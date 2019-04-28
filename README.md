@@ -48,4 +48,5 @@ was executed in (the absolute path for this will be printed on application start
    Defaults to `http://localhost:8080`.
  + `collectorSettings` - This list is dynamically generated with all available collectors. Set
  `true` to enable the collector. Set `false` or delete the line to disable the collector.
- See #Features for a description of each collector.
+ See #Features for a description of each collector. Note it's possible for a collector to not
+ produce an output if its value is `0`.
