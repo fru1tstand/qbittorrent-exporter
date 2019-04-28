@@ -19,8 +19,8 @@ enum class TorrentsCollector(
     { torrents -> torrents.mapNonZeroToMetric { it.downloadRemainingBytes } }
   ),
   COMPLETED_BYTES(
-    "The amount of actually bytes completed from any source. Actually, meaning, blocks of data " +
-        "that have passed CRC and is verified to be non-corrupt. Any source as it's possible " +
+    "The amount of 'actual' bytes completed from any source. 'Actual', meaning, blocks of data " +
+        "that have passed CRC and are verified to be non-corrupt. Any source as it's possible " +
         "that a torrent could be pieced together from sources other than that of qbt.",
     MetricType.GAUGE,
     { torrents -> torrents.mapAllToMetric { it.completedBytes } }

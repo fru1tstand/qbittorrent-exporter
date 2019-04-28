@@ -19,14 +19,15 @@ internal class AggregateTorrentCollectorTest {
             downloadTotalBytes = 4,
             downloadSessionBytes = 5,
             seedersAvailable = 6,
-            seedersConnected = 7,
-            leechersAvailable = 8,
+            leechersAvailable = 7,
+            seedersConnected = 8,
             leechersConnected = 9,
-            ratio = 10.10,
-            activeTimeSeconds = 11,
-            uploadTotalBytes = 12,
-            uploadSessionBytes = 13,
-            uploadPayloadRateBytesPerSecond = 14
+            activeTimeSeconds = 10,
+            sizeWantedBytes = 11,
+            sizeTotalBytes = 12,
+            uploadTotalBytes = 13,
+            uploadSessionBytes = 14,
+            uploadPayloadRateBytesPerSecond = 15
           )
         ),
         Pair(
@@ -42,8 +43,8 @@ internal class AggregateTorrentCollectorTest {
             seedersConnected = null,
             leechersAvailable = null,
             leechersConnected = null,
-            ratio = null,
-            activeTimeSeconds = null,
+            sizeWantedBytes = null,
+            sizeTotalBytes = null,
             uploadTotalBytes = null,
             uploadSessionBytes = null,
             uploadPayloadRateBytesPerSecond = null
@@ -52,7 +53,7 @@ internal class AggregateTorrentCollectorTest {
       )
     )
 
-    /** Returns the metric name for the [serverStateCollector]. */
+    /** Returns the metric name for the [aggregateTorrentCollector]. */
     private fun metricNameOf(aggregateTorrentCollector: AggregateTorrentCollector): String =
       "qbt_aggregate_torrent_${aggregateTorrentCollector.name.toLowerCase()}"
 
@@ -75,5 +76,75 @@ internal class AggregateTorrentCollectorTest {
   @Test
   fun downloadRemainingBytes() {
     assertOutput(AggregateTorrentCollector.DOWNLOAD_REMAINING_BYTES, 1)
+  }
+
+  @Test
+  fun completedBytes() {
+    assertOutput(AggregateTorrentCollector.COMPLETED_BYTES, 2)
+  }
+
+  @Test
+  fun downloadPayloadRateBytesPerSecond() {
+    assertOutput(AggregateTorrentCollector.DOWNLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 3)
+  }
+
+  @Test
+  fun downloadTotalBytes() {
+    assertOutput(AggregateTorrentCollector.DOWNLOAD_TOTAL_BYTES, 4)
+  }
+
+  @Test
+  fun downloadSessionBytes() {
+    assertOutput(AggregateTorrentCollector.DOWNLOAD_SESSION_BYTES, 5)
+  }
+
+  @Test
+  fun seedersAvailable() {
+    assertOutput(AggregateTorrentCollector.SEEDERS_AVAILABLE, 6)
+  }
+
+  @Test
+  fun leechersAvailable() {
+    assertOutput(AggregateTorrentCollector.LEECHERS_AVAILABLE, 7)
+  }
+
+  @Test
+  fun seedersConnected() {
+    assertOutput(AggregateTorrentCollector.SEEDERS_CONNECTED, 8)
+  }
+
+  @Test
+  fun leechersConnected() {
+    assertOutput(AggregateTorrentCollector.LEECHERS_CONNECTED, 9)
+  }
+
+  @Test
+  fun activeTimeSeconds() {
+    assertOutput(AggregateTorrentCollector.ACTIVE_TIME_SECONDS, 10)
+  }
+
+  @Test
+  fun sizeWantedBytes() {
+    assertOutput(AggregateTorrentCollector.SIZE_WANTED_BYTES, 11)
+  }
+
+  @Test
+  fun sizeTotalBytes() {
+    assertOutput(AggregateTorrentCollector.SIZE_TOTAL_BYTES, 12)
+  }
+
+  @Test
+  fun uploadTotalBytes() {
+    assertOutput(AggregateTorrentCollector.UPLOAD_TOTAL_BYTES, 13)
+  }
+
+  @Test
+  fun uploadSessionBytes() {
+    assertOutput(AggregateTorrentCollector.UPLOAD_SESSION_BYTES, 14)
+  }
+
+  @Test
+  fun uploadPayloadRateBytesPerSecond() {
+    assertOutput(AggregateTorrentCollector.UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 15)
   }
 }
