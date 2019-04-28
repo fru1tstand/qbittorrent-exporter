@@ -48,7 +48,7 @@ class SettingsManagerImpl @Inject constructor(
 
     // Write settings file if none exists
     if (!settingsFile.exists()) {
-      logger.i("No settings file found, creating one.")
+      logger.i("No settings file found, creating one at ${settingsFile.absoluteFile}.")
       settingsFile.writeText(gson.toJson(Settings()))
     } else {
       logger.i("Settings found, will load from $DEFAULT_SETTINGS_FILE_LOCATION")
@@ -74,11 +74,10 @@ class SettingsManagerImpl @Inject constructor(
     }
 
     logger.i(
-      "Trying to write an example settings file at " +
-          "$settingsFilePath$EXAMPLE_SETTINGS_FILE_LOCATION.")
+      "Trying to write an example settings file at " + exampleSettingsFile.absoluteFile)
     try {
       exampleSettingsFile.writeText(gson.toJson(Settings()))
-      logger.i("Success!")
+      logger.i("Successfully wrote example settings!")
     } catch (e: IOException) {
       logger.e("Nevermind. Something bad happened while writing the example settings:")
       throw e
