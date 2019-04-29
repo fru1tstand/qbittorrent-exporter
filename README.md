@@ -19,6 +19,9 @@ file called `qbt-exporter-fat-<version>.jar` in `build/libs`.
 #### Usage
 Run `java -jar <qbt-exporter.jar>`.
 
+**Warning:** If you're polling faster than once every 1500ms, you must change qBittorrent settings.
+See the FAQ for details.
+
 #### Notes
  + It's advisable to `cd` to the same directory as the jar before running. A lot of paths within the
  application are relative, which means the paths will resolve from the directory the run command is
@@ -110,8 +113,14 @@ was executed in (the absolute path for this will be printed on application start
  See #Features for a description of each collector.
 
 ## FAQ
- + **I've enabled the collector but it's not showing up in `/metrics`**  
-   If it's a sliced metric (ie. all `aggregate_torrent` metrics are sliced), automatic omission will
-   prevent slices that return `0`. If all slices return `0`, then no metrics are produced, so the
-   collector will return an empty string (and now show up in the metrics page) to save precious
-   database space.
+ + **My metrics aren't updating faster than once every 1500ms**  
+   qBittorrent's default web ui refresh rate is 1500ms. To poll faster, you must change advanced
+   settings (which cannot be done with the web ui). The easiest way to do this is to use the desktop
+   client `Tools > Options > Advanced > Transfer list refresh interval` and change the value to
+   your polling frequency (it's not recommended to set this value lower than 1000ms as there's an
+   [open bug](https://github.com/qbittorrent/qBittorrent/issues/8346) about the resulting values not
+   being correct).
+ + **I've enabled a collector but it's not showing up in `/metrics`**  
+   If it's a sliced metric (note all `aggregate_torrent` metrics are sliced), automatic omission
+   will prevent slices that return `0` from appearing. If all slices are omitted for a given metric,
+   it will not show up in `/metrics`. This is done to save database disk space.
