@@ -59,6 +59,16 @@ internal class FlagsImplTest {
     assertThat(it).contains("Collectors (as they appear in settings)")
   }
 
+  @Test
+  fun handle_settings() = verifyHandle("--settings") {
+    assertThat(it).contains("Settings")
+  }
+
+  @Test
+  fun handle_s() = verifyHandle("-s") {
+    assertThat(it).contains("Settings")
+  }
+
   /**
    * Verifies that by passing [flag] into the cli, `handle` will return `true`, and the information
    * output of the logger will conform to [outputValidation].

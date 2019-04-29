@@ -7,8 +7,15 @@ import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 import me.fru1t.qbtexporter.dagger.QbtExporterComponent
 import me.fru1t.qbtexporter.logger.Logger
+import me.fru1t.qbtexporter.settings.Settings
+import me.fru1t.qbtexporter.settings.annotation.Documentation
+import java.util.Stack
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.jvmErasure
 
 /** Implementation of [Flags]. */
 class FlagsImpl @Inject constructor(
@@ -34,6 +41,10 @@ class FlagsImpl @Inject constructor(
       "--collectors" -> {
         logCollectors()
       }
+      "-s",
+      "--settings" -> {
+        logSettings()
+      }
       else -> {
         logHelp("Unknown flag ${args[0]}.")
       }
@@ -58,6 +69,30 @@ class FlagsImpl @Inject constructor(
     logger.i(output.toString())
   }
 
+  private fun logSettings() {
+    val output = StringBuilder("\nSettings\n")
+    logSettingsRecursive(Settings::class, Stack(), output)
+    logger.i(output.toString())
+  }
+
+  private fun logSettingsRecursive(
+    currentClass: KClass<*>,
+    visitedClasses: Stack<KClass<*>>,
+    output: StringBuilder
+  ) {
+    if (!currentClass.isData) {
+      return
+    }
+    visitedClasses.push(currentClass)
+    val outputPrefix = visitedClasses.joinToString(separator = "") { "    " }
+    currentClass.primaryConstructor!!.parameters.forEach {
+      output.append(
+        "$outputPrefix${it.name} - ${it.findAnnotation<Documentation>()!!.documentation}\n")
+      logSettingsRecursive(it.type.jvmErasure, visitedClasses, output)
+    }
+    visitedClasses.pop()
+  }
+
   private fun logHelp(error: String? = null) {
     error?.let { logger.w("\n$it") }
     logger.i("\n" +
@@ -65,7 +100,8 @@ class FlagsImpl @Inject constructor(
         "[flag]\n" +
         "  <none>           Starts the exporter normally.\n" +
         "  -h|--help        Prints this help text.\n" +
-        "  -c|--collectors  Prints this help text.\n"
+        "  -c|--collectors  Outputs all collectors and their help text.\n" +
+        "  -s|--settings    Outputs all settings and their documentation.\n"
     )
   }
 }
