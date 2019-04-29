@@ -1,7 +1,7 @@
 # qBittorrent Exporter
-A kotlin-based, prometheus exporter for qBittorrent (qbt) that relies on qBittorrent's web ui REST
-API. This exporter exposes all metrics available in the qbt api in a prometheus-consumable fashion,
-providing fine grain controls over which metrics are enabled.
+A kotlin-based, prometheus exporter for qBittorrent 4.x (qbt) that relies on qBittorrent's web ui
+REST API. This exporter exposes all metrics available in the qbt api in a prometheus-consumable
+fashion, providing fine grain controls over which metrics are enabled.
 
 #### Huh?
  - [qBittorrent](https://www.qbittorrent.org/) - a "free and reliable P2P bittorrent client" that's
