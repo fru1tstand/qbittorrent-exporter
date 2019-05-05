@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
-import io.ktor.client.engine.apache.Apache
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.response.readText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
@@ -55,7 +55,7 @@ internal class ExporterServerImplTest {
   @Test
   fun runBlocking_root() = testDuringServerLifecycle {
     val responseText =
-      runBlocking { HttpClient(Apache).call(TEST_BASE_URL).response.readText() }
+      runBlocking { HttpClient(CIO).call(TEST_BASE_URL).response.readText() }
     assertThat(responseText).isEqualTo("<a href=\"/metrics\">metrics</a>")
   }
 
@@ -66,7 +66,7 @@ internal class ExporterServerImplTest {
     whenever(mockCollectorSettingsUtils.getEnabledMaindataCollectors())
       .thenReturn(listOf(ServerStateCollector.ALL_TIME_DOWNLOAD_BYTES))
 
-    val response = runBlocking { HttpClient(Apache).call("$TEST_BASE_URL/metrics").response }
+    val response = runBlocking { HttpClient(CIO).call("$TEST_BASE_URL/metrics").response }
     assertThat(response.status).isEqualTo(HttpStatusCode.OK)
     assertThat(runBlocking { response.readText() })
       .isEqualTo(ServerStateCollector.ALL_TIME_DOWNLOAD_BYTES.collect(testData).toString())

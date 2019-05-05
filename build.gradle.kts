@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.jvm.tasks.Jar
 
 group = "me.fru1t"
-version = "1.0.0-release"
+version = "1.1.0-dev"
 
 plugins {
     application
@@ -41,7 +41,7 @@ dependencies {
     implementation("com.google.code.gson:gson:$gsonVersion")
     implementation(ktor())
     implementation(ktor("client-core"))
-    implementation(ktor("client-apache"))
+    implementation(ktor("client-cio"))
     implementation(ktor("server-core"))
     implementation(ktor("server-jetty"))
     implementation("org.slf4j:slf4j-simple:1.7.26")

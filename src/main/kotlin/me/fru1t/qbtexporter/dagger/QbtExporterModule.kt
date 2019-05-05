@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
+import io.ktor.client.engine.cio.CIO
 import me.fru1t.qbtexporter.logger.Logger
 import me.fru1t.qbtexporter.logger.impl.ConsoleLogger
 import me.fru1t.qbtexporter.settings.impl.SettingsManagerImpl
@@ -23,7 +23,7 @@ class QbtExporterModule {
 
   @Provides
   @Singleton
-  fun provideHttpClient(): HttpClient = HttpClient(Apache)
+  fun provideHttpClient(): HttpClient = HttpClient(CIO)
 
   @Provides
   @Singleton
