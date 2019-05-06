@@ -106,6 +106,11 @@ enum class AggregateTorrentCollector(
     "The summed upload rate of all in-memory torrents' payload data.",
     MetricType.GAUGE,
     { torrents -> torrents.sum { it.uploadPayloadRateBytesPerSecond?.toLong() } }
+  ),
+  TORRENT_COUNT(
+    "The number of torrents in this group.",
+    MetricType.GAUGE,
+    { torrents -> torrents.size }
   );
 
   private companion object {

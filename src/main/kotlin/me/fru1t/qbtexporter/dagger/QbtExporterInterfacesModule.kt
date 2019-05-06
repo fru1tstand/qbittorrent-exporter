@@ -11,7 +11,7 @@ import me.fru1t.qbtexporter.exporter.impl.ExporterServerImpl
 import me.fru1t.qbtexporter.kotlin.LazyRelayFactory
 import me.fru1t.qbtexporter.kotlin.impl.LazyRelayFactoryImpl
 import me.fru1t.qbtexporter.qbt.api.QbtApi
-import me.fru1t.qbtexporter.qbt.api.impl.QbtApiImpl
+import me.fru1t.qbtexporter.qbt.api.impl.DebugQbtApi
 import me.fru1t.qbtexporter.settings.SettingsManager
 import me.fru1t.qbtexporter.settings.impl.SettingsManagerImpl
 import javax.inject.Inject
@@ -30,7 +30,7 @@ interface QbtExporterInterfacesModule {
 
   @Binds
   @Singleton
-  fun bindQbtApi(impl: QbtApiImpl): QbtApi
+  fun bindQbtApi(impl: DebugQbtApi): QbtApi
 
   @Binds
   @Singleton

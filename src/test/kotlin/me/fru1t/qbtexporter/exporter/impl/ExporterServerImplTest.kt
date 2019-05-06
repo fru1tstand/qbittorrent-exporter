@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations
 internal class ExporterServerImplTest {
   private companion object {
     private const val TEST_PORT = 9562
-    private const val TEST_HOST = "127.0.0.4"
+    private const val TEST_HOST = "127.0.0.1"
     private const val TEST_BASE_URL = "http://$TEST_HOST:$TEST_PORT"
 
     private val TEST_SETTINGS = Settings(

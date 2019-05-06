@@ -147,4 +147,9 @@ internal class AggregateTorrentCollectorTest {
   fun uploadPayloadRateBytesPerSecond() {
     assertOutput(AggregateTorrentCollector.UPLOAD_PAYLOAD_RATE_BYTES_PER_SECOND, 15)
   }
+
+  @Test
+  fun torrentCount() {
+    assertOutput(AggregateTorrentCollector.TORRENT_COUNT, TEST_DATA.torrents!!.size)
+  }
 }
