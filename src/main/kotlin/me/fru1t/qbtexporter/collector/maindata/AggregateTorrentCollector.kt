@@ -1,6 +1,8 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import me.fru1t.qbtexporter.collector.MaindataCollector
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainer
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.SingleMetric
@@ -113,8 +115,21 @@ enum class AggregateTorrentCollector(
     { torrents -> torrents.size }
   );
 
-  private companion object {
+  companion object : MaindataCollectorContainer {
     private const val METRIC_NAME_PREFIX = "qbt_aggregate_torrent_"
+
+    override fun collect(
+      settings: MaindataCollectorContainerSettings,
+      maindata: Maindata
+    ): List<Metric> {
+      val result = ArrayList<Metric>()
+      settings.aggregateTorrentCollectors?.forEach { collector, collectorSettings ->
+        if (collectorSettings.enabled == true) {
+          result.add(collector.collect(maindata))
+        }
+      }
+      return result
+    }
 
     /**
      * Sums the output [transformation] on each [Torrent] in this collection to produce a resulting

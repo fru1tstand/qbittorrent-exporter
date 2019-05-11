@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.collector
 
+import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
 import me.fru1t.qbtexporter.settings.annotation.Documentation
@@ -12,6 +13,10 @@ data class MaindataCollectorContainerSettings(
 
   @Documentation("Collectors for maindata metrics.")
   var serverStateCollectors: Map<ServerStateCollector, BasicCollectorSettings>? =
+    createDefaultSettingsMap { BasicCollectorSettings() },
+
+  @Documentation("Collectors for aggregate torrent metrics.")
+  var aggregateTorrentCollectors: Map<AggregateTorrentCollector, BasicCollectorSettings>? =
     createDefaultSettingsMap { BasicCollectorSettings() }
 )
 
