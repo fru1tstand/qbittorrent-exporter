@@ -1,6 +1,5 @@
 package me.fru1t.qbtexporter.collector.maindata
 
-import me.fru1t.qbtexporter.collector.MaindataCollector
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainer
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
@@ -20,7 +19,7 @@ enum class AggregateTorrentCollector(
   val help: String,
   metricType: MetricType,
   private val update: (Collection<Torrent>) -> Number?
-) : MaindataCollector {
+) {
   DOWNLOAD_REMAINING_BYTES(
     "The total number of bytes remaining to download from all in-memory torrents, including " +
         "those of unwanted files.",
@@ -151,7 +150,8 @@ enum class AggregateTorrentCollector(
     )
   }
 
-  override fun collect(maindata: Maindata): Metric {
+  /** Returns the [Metric] for this collector using the passed [maindata]. */
+  fun collect(maindata: Maindata): Metric {
     metric.value = update(maindata.torrents?.values ?: listOf())
     return metric
   }

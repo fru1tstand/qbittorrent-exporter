@@ -8,7 +8,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.response.readText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
-import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
+import me.fru1t.qbtexporter.collector.BasicCollectorSettings
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.exporter.ExporterServerSettings
 import me.fru1t.qbtexporter.kotlin.testing.TestLazyRelay
@@ -36,7 +37,6 @@ internal class ExporterServerImplTest {
   }
 
   @Mock private lateinit var mockQbtApi: QbtApi
-  @Mock private lateinit var mockCollectorSettingsUtils: CollectorSettingsUtils
   @Mock private lateinit var mockSettingsManager: SettingsManager
   private lateinit var exporterServerImpl: ExporterServerImpl
 
@@ -47,7 +47,6 @@ internal class ExporterServerImplTest {
     exporterServerImpl =
       ExporterServerImpl(
         qbtApi = mockQbtApi,
-        collectorSettingsUtils = mockCollectorSettingsUtils,
         settingsManager = mockSettingsManager
       )
   }
@@ -63,8 +62,20 @@ internal class ExporterServerImplTest {
   fun runBlocking_metrics() = testDuringServerLifecycle {
     val testData = Maindata()
     whenever(mockQbtApi.fetchMaindata()).thenReturn(testData)
-    whenever(mockCollectorSettingsUtils.getEnabledMaindataCollectors())
-      .thenReturn(listOf(ServerStateCollector.ALL_TIME_DOWNLOAD_BYTES))
+    whenever(mockSettingsManager.getSettingsRelay()).thenReturn(
+      TestLazyRelay.of(
+        Settings(
+          maindataCollectorContainerSettings = MaindataCollectorContainerSettings(
+            serverStateCollectors = mapOf(
+              Pair(
+                ServerStateCollector.ALL_TIME_DOWNLOAD_BYTES,
+                BasicCollectorSettings(enabled = true)
+              )
+            )
+          )
+        )
+      )
+    )
 
     val response = runBlocking { HttpClient(CIO).call("$TEST_BASE_URL/metrics").response }
     assertThat(response.status).isEqualTo(HttpStatusCode.OK)

@@ -1,7 +1,6 @@
 package me.fru1t.qbtexporter.cli.impl
 
 import me.fru1t.qbtexporter.cli.Flags
-import me.fru1t.qbtexporter.collector.CollectorSettingsUtils
 import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.collector.maindata.TorrentsCollector
@@ -56,15 +55,15 @@ class FlagsImpl @Inject constructor(
     val output = StringBuilder("\nCollectors (as they appear in settings)\n")
     output.append("  Server State\n")
     ServerStateCollector.values().forEach {
-      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+      output.append("    ${it.name} - ${it.help}\n")
     }
     output.append("  Torrents\n")
     TorrentsCollector.values().forEach {
-      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+      output.append("    ${it.name} - ${it.help}\n")
     }
     output.append("  Aggregate Torrents\n")
     AggregateTorrentCollector.values().forEach {
-      output.append("    ${CollectorSettingsUtils.getSettingsName(it)} - ${it.help}\n")
+      output.append("    ${it.name} - ${it.help}\n")
     }
     logger.i(output.toString())
   }

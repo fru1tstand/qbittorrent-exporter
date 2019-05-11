@@ -1,6 +1,5 @@
 package me.fru1t.qbtexporter.settings
 
-import me.fru1t.qbtexporter.collector.CollectorSettings
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.exporter.ExporterServerSettings
 import me.fru1t.qbtexporter.qbt.QbtSettings
@@ -31,9 +30,6 @@ data class Settings(
 
   @Documentation("qBittorrent settings like web ui path.")
   var qbtSettings: QbtSettings? = QbtSettings(),
-
-  @Documentation("Collector settings like which metrics are exported.")
-  var collectorSettings: CollectorSettings? = CollectorSettings(),
 
   @Documentation("Settings for the collectors based off of the maindata api call.")
   var maindataCollectorContainerSettings: MaindataCollectorContainerSettings? =
