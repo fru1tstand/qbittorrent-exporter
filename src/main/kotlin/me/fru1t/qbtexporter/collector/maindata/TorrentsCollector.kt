@@ -1,6 +1,8 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import me.fru1t.qbtexporter.collector.MaindataCollector
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainer
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
@@ -97,11 +99,24 @@ enum class TorrentsCollector(
     { torrents -> torrents.mapNonZeroToMetric { it.uploadPayloadRateBytesPerSecond } }
   );
 
-  private companion object {
+  companion object : MaindataCollectorContainer {
     private const val METRIC_NAME_PREFIX = "qbt_torrent_"
 
     private const val LABEL_TORRENT_NAME = "name"
     private const val LABEL_TORRENT_HASH = "hash"
+
+    override fun collect(
+      settings: MaindataCollectorContainerSettings,
+      maindata: Maindata
+    ): List<Metric> {
+      val result = ArrayList<Metric>()
+      settings.torrentsCollectors?.forEach { collector, collectorSettings ->
+        if (collectorSettings.enabled == true) {
+          result.add(collector.collect(maindata))
+        }
+      }
+      return result
+    }
 
     /** Creates a label map for the given [torrent] and [torrentHash]. */
     private fun createTorrentLabelMap(torrent: Torrent, torrentHash: String): Map<String, String> {

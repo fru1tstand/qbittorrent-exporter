@@ -2,6 +2,7 @@ package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 import org.junit.jupiter.api.Test
@@ -94,6 +95,17 @@ internal class TorrentsCollectorTest {
 
       assertThat(resultLines).isEqualTo(expectedLines.joinToString(separator = "\n"))
     }
+  }
+
+  @Test
+  fun container_collect() {
+    // Enable all collectors
+    val settings = MaindataCollectorContainerSettings()
+    settings.torrentsCollectors!!.values.forEach { it.enabled = true }
+
+    val result = TorrentsCollector.collect(settings, TEST_DATA)
+
+    assertThat(result).hasSize(TorrentsCollector.values().size)
   }
 
   @Test

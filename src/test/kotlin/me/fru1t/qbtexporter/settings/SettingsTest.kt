@@ -28,7 +28,8 @@ internal class SettingsTest {
           Char::class,
           CharArray::class,
           CharSequence::class,
-          Number::class)
+          Number::class,
+          Enum::class)
   }
 
   @Test
