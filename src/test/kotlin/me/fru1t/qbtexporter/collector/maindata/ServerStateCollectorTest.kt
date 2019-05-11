@@ -1,6 +1,7 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
+import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.ServerState
 import org.junit.jupiter.api.Test
@@ -45,6 +46,17 @@ internal class ServerStateCollectorTest {
       assertThat(resultInternalMetric)
         .isEqualTo("${metricNameOf(serverStateCollector)} $expectedOutput")
     }
+  }
+
+  @Test
+  fun container_collect() {
+    // Enable all server state collectors
+    val settings = MaindataCollectorContainerSettings()
+    settings.serverStateCollectors!!.values.forEach { it.enabled = true }
+
+    val result = ServerStateCollector.collect(settings, TEST_DATA)
+
+    assertThat(result).hasSize(ServerStateCollector.values().size)
   }
 
   @Test
