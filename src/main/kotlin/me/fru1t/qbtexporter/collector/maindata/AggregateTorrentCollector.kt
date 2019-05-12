@@ -1,10 +1,12 @@
 package me.fru1t.qbtexporter.collector.maindata
 
+import me.fru1t.qbtexporter.collector.BasicCollectorSettings
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainer
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
-import me.fru1t.qbtexporter.prometheus.metric.SingleMetric
+import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
+import me.fru1t.qbtexporter.prometheus.metric.multimetric.MetricLabel
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 
@@ -18,7 +20,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 enum class AggregateTorrentCollector(
   val help: String,
   metricType: MetricType,
-  private val update: (Collection<Torrent>) -> Number?
+  private val aggregation: (Collection<Torrent>) -> Number?
 ) {
   DOWNLOAD_REMAINING_BYTES(
     "The total number of bytes remaining to download from all in-memory torrents, including " +
@@ -116,6 +118,7 @@ enum class AggregateTorrentCollector(
 
   companion object : MaindataCollectorContainer {
     private const val METRIC_NAME_PREFIX = "qbt_aggregate_torrent_"
+    private val LABEL_SPECIAL_ALL = MetricLabel.Builder().addLabel("special", "all").build()
 
     override fun collect(
       settings: MaindataCollectorContainerSettings,
@@ -124,7 +127,7 @@ enum class AggregateTorrentCollector(
       val result = ArrayList<Metric>()
       settings.aggregateTorrentCollectors?.forEach { collector, collectorSettings ->
         if (collectorSettings.enabled == true) {
-          result.add(collector.collect(maindata))
+          result.add(collector.collect(collectorSettings, maindata))
         }
       }
       return result
@@ -141,9 +144,9 @@ enum class AggregateTorrentCollector(
     }
   }
 
-  private val metric: SingleMetric by lazy {
-    SingleMetric(
-      value = 0,
+  private val metric: MultiMetric by lazy {
+    MultiMetric(
+      metrics = mapOf(),
       name = METRIC_NAME_PREFIX + name.toLowerCase(),
       help = help,
       type = metricType
@@ -151,8 +154,13 @@ enum class AggregateTorrentCollector(
   }
 
   /** Returns the [Metric] for this collector using the passed [maindata]. */
-  fun collect(maindata: Maindata): Metric {
-    metric.value = update(maindata.torrents?.values ?: listOf())
+  fun collect(collectorSettings: BasicCollectorSettings, maindata: Maindata): Metric {
+    val metrics = HashMap<MetricLabel, Number?>()
+    if (collectorSettings.enabled == true) {
+      metrics[LABEL_SPECIAL_ALL] = aggregation(maindata.torrents?.values ?: listOf())
+    }
+
+    metric.metrics = metrics
     return metric
   }
 }

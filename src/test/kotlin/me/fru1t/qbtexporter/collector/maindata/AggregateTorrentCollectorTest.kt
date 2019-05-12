@@ -1,6 +1,7 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
+import me.fru1t.qbtexporter.collector.BasicCollectorSettings
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
@@ -54,23 +55,26 @@ internal class AggregateTorrentCollectorTest {
       )
     )
 
-    /** Returns the metric name for the [aggregateTorrentCollector]. */
-    private fun metricNameOf(aggregateTorrentCollector: AggregateTorrentCollector): String =
-      "qbt_aggregate_torrent_${aggregateTorrentCollector.name.toLowerCase()}"
+    private val TEST_SETTINGS = BasicCollectorSettings(enabled = true)
 
     /**
      * Asserts that when passing [TEST_DATA] into the [aggregateTorrentCollector], the
-     * [expectedOutput] is produced.
+     * [expectedSpecialAllOutput] is produced.
      */
     private fun assertOutput(
       aggregateTorrentCollector: AggregateTorrentCollector,
-      expectedOutput: Number
+      expectedSpecialAllOutput: Number
     ) {
       val resultInternalMetric =
-        aggregateTorrentCollector.collect(TEST_DATA).toString().lines().last()
+        aggregateTorrentCollector.collect(TEST_SETTINGS, TEST_DATA)
+          .toString()
+          .lines()
+          .filterIndexed { index, _ -> index > 1 }
+          .joinToString(separator = "\n")
 
+      val baseMetricName = "qbt_aggregate_torrent_${aggregateTorrentCollector.name.toLowerCase()}"
       assertThat(resultInternalMetric)
-        .isEqualTo("${metricNameOf(aggregateTorrentCollector)} $expectedOutput")
+        .isEqualTo("$baseMetricName{special=\"all\"} $expectedSpecialAllOutput")
     }
   }
 
