@@ -2,7 +2,7 @@ package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.metric.multimetric.MetricLabel
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent

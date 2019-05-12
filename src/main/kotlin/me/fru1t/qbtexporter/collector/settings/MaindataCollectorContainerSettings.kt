@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.collector
+package me.fru1t.qbtexporter.collector.settings
 
 import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector

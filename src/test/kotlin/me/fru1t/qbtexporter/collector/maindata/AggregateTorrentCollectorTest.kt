@@ -1,8 +1,8 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
-import me.fru1t.qbtexporter.collector.BasicCollectorSettings
-import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.BasicCollectorSettings
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 import org.junit.jupiter.api.Test
@@ -55,7 +55,8 @@ internal class AggregateTorrentCollectorTest {
       )
     )
 
-    private val TEST_SETTINGS = BasicCollectorSettings(enabled = true)
+    private val TEST_SETTINGS =
+      BasicCollectorSettings(enabled = true)
 
     /**
      * Asserts that when passing [TEST_DATA] into the [aggregateTorrentCollector], the

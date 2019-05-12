@@ -1,7 +1,7 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
-import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.ServerState
 import org.junit.jupiter.api.Test

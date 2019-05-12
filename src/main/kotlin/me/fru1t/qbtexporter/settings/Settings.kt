@@ -1,6 +1,6 @@
 package me.fru1t.qbtexporter.settings
 
-import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.exporter.ExporterServerSettings
 import me.fru1t.qbtexporter.qbt.QbtSettings
 import me.fru1t.qbtexporter.settings.annotation.Documentation

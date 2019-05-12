@@ -1,4 +1,4 @@
-package me.fru1t.qbtexporter.collector
+package me.fru1t.qbtexporter.collector.settings
 
 import com.google.common.truth.Truth.assertThat
 import me.fru1t.qbtexporter.collector.maindata.AggregateTorrentCollector

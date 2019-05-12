@@ -1,5 +1,6 @@
 package me.fru1t.qbtexporter.collector
 
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.qbt.response.Maindata
 

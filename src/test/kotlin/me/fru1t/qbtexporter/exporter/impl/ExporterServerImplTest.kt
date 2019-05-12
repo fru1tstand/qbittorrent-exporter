@@ -8,8 +8,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.response.readText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
-import me.fru1t.qbtexporter.collector.BasicCollectorSettings
-import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.BasicCollectorSettings
+import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.collector.maindata.ServerStateCollector
 import me.fru1t.qbtexporter.exporter.ExporterServerSettings
 import me.fru1t.qbtexporter.kotlin.testing.TestLazyRelay
