@@ -3,6 +3,7 @@ package me.fru1t.qbtexporter.collector.maindata
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.prometheus.metric.multimetric.MetricLabel
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 import org.junit.jupiter.api.Test
@@ -64,9 +65,17 @@ internal class TorrentsCollectorTest {
         .joinToString(separator = "\n")
 
     /** Creates the metric name including label for the given torrent and collector.*/
-    private fun labelOf(torrentPair: Pair<String, Torrent>, torrentsCollector: TorrentsCollector): String =
-      "qbt_torrent_${torrentsCollector.name.toLowerCase()}{hash=\"${torrentPair.first}\"," +
-          "name=\"${torrentPair.second.displayName!!}\"}"
+    private fun labelOf(
+      torrentPair: Pair<String, Torrent>,
+      torrentsCollector: TorrentsCollector
+    ): String {
+      val label =
+        MetricLabel.Builder()
+          .addLabel("hash", torrentPair.first)
+          .addLabel("name", torrentPair.second.displayName!!)
+          .build()
+      return "qbt_torrent_${torrentsCollector.name.toLowerCase()}{$label}"
+    }
 
     /**
      * Asserts that when passing [TEST_DATA] into the [torrentsCollector], the [expectedOutputs]

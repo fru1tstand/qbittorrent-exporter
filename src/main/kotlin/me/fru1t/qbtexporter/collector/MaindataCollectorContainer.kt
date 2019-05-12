@@ -8,6 +8,8 @@ import me.fru1t.qbtexporter.qbt.response.Maindata
  * to the container's companion object.
  */
 interface MaindataCollectorContainer {
-  /** Collect all metrics from all collectors within this container. */
+  /**
+   * Collect all metrics from all collectors within this container following the settings provided.
+   */
   fun collect(settings: MaindataCollectorContainerSettings, maindata: Maindata): List<Metric>
 }

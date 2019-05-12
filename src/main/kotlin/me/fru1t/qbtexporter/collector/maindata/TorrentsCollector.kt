@@ -5,6 +5,7 @@ import me.fru1t.qbtexporter.collector.MaindataCollectorContainerSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
+import me.fru1t.qbtexporter.prometheus.metric.multimetric.MetricLabel
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 
@@ -12,7 +13,7 @@ import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 enum class TorrentsCollector(
   val help: String,
   metricType: MetricType,
-  private val update: (Map<String, Torrent>) -> Map<Map<String, String>, Number?>
+  private val update: (Map<String, Torrent>) -> Map<MetricLabel, Number?>
 ) {
   DOWNLOAD_REMAINING_BYTES(
     "The amount of bytes remaining to download, including those of unwanted files.",
@@ -118,18 +119,17 @@ enum class TorrentsCollector(
     }
 
     /** Creates a label map for the given [torrent] and [torrentHash]. */
-    private fun createTorrentLabelMap(torrent: Torrent, torrentHash: String): Map<String, String> {
-      return mapOf(
-        Pair(LABEL_TORRENT_HASH, torrentHash),
-        Pair(LABEL_TORRENT_NAME, torrent.displayName ?: "")
-      )
-    }
+    private fun createMetricLabel(torrent: Torrent, torrentHash: String): MetricLabel =
+      MetricLabel.Builder()
+        .addLabel(LABEL_TORRENT_HASH, torrentHash)
+        .addLabel(LABEL_TORRENT_NAME, torrent.displayName ?: "")
+        .build()
 
     /** Converts all (torrent/hash) pairs to (label/metric value) pairs. */
     private fun Map<String, Torrent>.mapAllToMetric(
       collector: (Torrent) -> Number?
-    ): Map<Map<String, String>, Number?> =
-      mapKeys { entry -> createTorrentLabelMap(entry.value, entry.key) }
+    ): Map<MetricLabel, Number?> =
+      mapKeys { entry -> createMetricLabel(entry.value, entry.key) }
         .mapValues { entry -> collector(entry.value) }
 
     /**
@@ -138,9 +138,9 @@ enum class TorrentsCollector(
      */
     private fun Map<String, Torrent>.mapNonZeroToMetric(
       collector: (Torrent) -> Number?
-    ): Map<Map<String, String>, Number?> =
+    ): Map<MetricLabel, Number?> =
       filter { entry -> (collector(entry.value) ?: 0).toDouble() != 0.0 }
-        .mapKeys { entry -> createTorrentLabelMap(entry.value, entry.key) }
+        .mapKeys { entry -> createMetricLabel(entry.value, entry.key) }
         .mapValues { entry -> collector(entry.value) }
   }
 
