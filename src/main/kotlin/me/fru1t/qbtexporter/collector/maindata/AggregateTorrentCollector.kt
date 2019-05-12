@@ -1,8 +1,8 @@
 package me.fru1t.qbtexporter.collector.maindata
 
-import me.fru1t.qbtexporter.collector.settings.BasicCollectorSettings
 import me.fru1t.qbtexporter.collector.MaindataCollectorContainer
 import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.maindata.AggregateTorrentCollectorSettings
 import me.fru1t.qbtexporter.prometheus.Metric
 import me.fru1t.qbtexporter.prometheus.MetricType
 import me.fru1t.qbtexporter.prometheus.metric.MultiMetric
@@ -124,10 +124,11 @@ enum class AggregateTorrentCollector(
       settings: MaindataCollectorContainerSettings,
       maindata: Maindata
     ): List<Metric> {
-      val result = ArrayList<Metric>()
+      val result = ArrayList<MultiMetric>()
       settings.aggregateTorrentCollectors?.forEach { collector, collectorSettings ->
-        if (collectorSettings.enabled == true) {
-          result.add(collector.collect(collectorSettings, maindata))
+        val metric = collector.collect(collectorSettings, maindata)
+        if (!metric.isEmpty()) {
+          result.add(metric)
         }
       }
       return result
@@ -153,10 +154,16 @@ enum class AggregateTorrentCollector(
     )
   }
 
-  /** Returns the [Metric] for this collector using the passed [maindata]. */
-  fun collect(collectorSettings: BasicCollectorSettings, maindata: Maindata): Metric {
+  /**
+   * Returns the [Metric] for this collector using the passed [maindata], respecting the given
+   * [collectorSettings].
+   */
+  fun collect(
+    collectorSettings: AggregateTorrentCollectorSettings,
+    maindata: Maindata
+  ): MultiMetric {
     val metrics = HashMap<MetricLabel, Number?>()
-    if (collectorSettings.enabled == true) {
+    if (collectorSettings.all == true) {
       metrics[LABEL_SPECIAL_ALL] = aggregation(maindata.torrents?.values ?: listOf())
     }
 

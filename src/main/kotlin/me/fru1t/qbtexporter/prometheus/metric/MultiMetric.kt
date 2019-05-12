@@ -40,4 +40,7 @@ class MultiMetric(
         metricLabelAndValue.second
       )
     }
+
+  /** Returns whether or not this metric has any metrics to show. */
+  fun isEmpty(): Boolean = metrics.isEmpty()
 }

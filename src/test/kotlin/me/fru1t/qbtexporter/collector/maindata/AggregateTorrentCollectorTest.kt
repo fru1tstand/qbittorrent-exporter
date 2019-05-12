@@ -1,8 +1,8 @@
 package me.fru1t.qbtexporter.collector.maindata
 
 import com.google.common.truth.Truth.assertThat
-import me.fru1t.qbtexporter.collector.settings.BasicCollectorSettings
 import me.fru1t.qbtexporter.collector.settings.MaindataCollectorContainerSettings
+import me.fru1t.qbtexporter.collector.settings.maindata.AggregateTorrentCollectorSettings
 import me.fru1t.qbtexporter.qbt.response.Maindata
 import me.fru1t.qbtexporter.qbt.response.maindata.torrents.Torrent
 import org.junit.jupiter.api.Test
@@ -55,8 +55,7 @@ internal class AggregateTorrentCollectorTest {
       )
     )
 
-    private val TEST_SETTINGS =
-      BasicCollectorSettings(enabled = true)
+    private val TEST_SETTINGS = AggregateTorrentCollectorSettings(all = true)
 
     /**
      * Asserts that when passing [TEST_DATA] into the [aggregateTorrentCollector], the
@@ -83,7 +82,7 @@ internal class AggregateTorrentCollectorTest {
   fun collect() {
     // Enable all collectors
     val settings = MaindataCollectorContainerSettings()
-    settings.aggregateTorrentCollectors!!.values.forEach { it.enabled = true }
+    settings.aggregateTorrentCollectors!!.values.forEach { it.all = true }
 
     val result = AggregateTorrentCollector.collect(settings, TEST_DATA)
 
