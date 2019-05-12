@@ -71,8 +71,8 @@ internal class TorrentsCollectorTest {
     ): String {
       val label =
         MetricLabel.Builder()
-          .addLabel("hash", torrentPair.first)
           .addLabel("name", torrentPair.second.displayName!!)
+          .addLabel("hash", torrentPair.first)
           .build()
       return "qbt_torrent_${torrentsCollector.name.toLowerCase()}{$label}"
     }

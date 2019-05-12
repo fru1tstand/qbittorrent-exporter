@@ -121,8 +121,8 @@ enum class TorrentsCollector(
     /** Creates a label map for the given [torrent] and [torrentHash]. */
     private fun createMetricLabel(torrent: Torrent, torrentHash: String): MetricLabel =
       MetricLabel.Builder()
-        .addLabel(LABEL_TORRENT_HASH, torrentHash)
         .addLabel(LABEL_TORRENT_NAME, torrent.displayName ?: "")
+        .addLabel(LABEL_TORRENT_HASH, torrentHash)
         .build()
 
     /** Converts all (torrent/hash) pairs to (label/metric value) pairs. */
