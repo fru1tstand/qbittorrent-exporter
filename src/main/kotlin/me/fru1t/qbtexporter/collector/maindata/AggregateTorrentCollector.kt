@@ -119,6 +119,7 @@ enum class AggregateTorrentCollector(
   companion object : MaindataCollectorContainer {
     private const val METRIC_NAME_PREFIX = "qbt_aggregate_torrent_"
     private val LABEL_SPECIAL_ALL = MetricLabel.Builder().addLabel("special", "all").build()
+    private val LABEL_NAME_CATEGORY = "category"
 
     override fun collect(
       settings: MaindataCollectorContainerSettings,
@@ -163,8 +164,21 @@ enum class AggregateTorrentCollector(
     maindata: Maindata
   ): MultiMetric {
     val metrics = HashMap<MetricLabel, Number?>()
+
     if (collectorSettings.all == true) {
       metrics[LABEL_SPECIAL_ALL] = aggregation(maindata.torrents?.values ?: listOf())
+    }
+
+    if (collectorSettings.eachCategory == true) {
+      val categories = HashSet<String?>()
+      maindata.torrents?.values?.mapTo(categories) { it.category }
+
+      categories.forEach { category ->
+        val label = MetricLabel.Builder().addLabel(LABEL_NAME_CATEGORY, category ?: "").build()
+
+        metrics[label] =
+          aggregation(maindata.torrents?.values?.filter { it.category == category } ?: listOf())
+      }
     }
 
     metric.metrics = metrics

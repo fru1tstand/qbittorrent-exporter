@@ -79,14 +79,46 @@ internal class AggregateTorrentCollectorTest {
   }
 
   @Test
-  fun collect() {
-    // Enable all collectors
+  fun collect_all() {
+    val data = Maindata(
+      torrents = mapOf(
+        Pair("hash1", Torrent(completedBytes = 100)),
+        Pair("hash2", Torrent(completedBytes = 200))
+      )
+    )
+
+    // Enable arbitrary collector
     val settings = MaindataCollectorContainerSettings()
-    settings.aggregateTorrentCollectors!!.values.forEach { it.all = true }
+    settings.aggregateTorrentCollectors!![AggregateTorrentCollector.COMPLETED_BYTES]?.all = true
 
-    val result = AggregateTorrentCollector.collect(settings, TEST_DATA)
+    val result = AggregateTorrentCollector.collect(settings, data)
 
-    assertThat(result).hasSize(AggregateTorrentCollector.values().size)
+    assertThat(result.first().toString().lines().last())
+      .isEqualTo("qbt_aggregate_torrent_completed_bytes{special=\"all\"} 300")
+  }
+
+  @Test
+  fun collect_category() {
+    val data = Maindata(
+      torrents = mapOf(
+        Pair("hash1", Torrent(category = "a", completedBytes = 100)),
+        Pair("hash2", Torrent(category = "a", completedBytes = 200)),
+        Pair("hash3", Torrent(category = "b", completedBytes = 400))
+      )
+    )
+
+    // Enable arbitrary collector
+    val settings = MaindataCollectorContainerSettings()
+    settings.aggregateTorrentCollectors!![AggregateTorrentCollector.COMPLETED_BYTES]?.eachCategory =
+      true
+
+    val result = AggregateTorrentCollector.collect(settings, data)
+    val metricOutput = result.first().toString()
+
+    assertThat(metricOutput)
+      .contains("qbt_aggregate_torrent_completed_bytes{category=\"a\"} 300")
+    assertThat(metricOutput)
+      .contains("qbt_aggregate_torrent_completed_bytes{category=\"b\"} 400")
   }
 
   @Test

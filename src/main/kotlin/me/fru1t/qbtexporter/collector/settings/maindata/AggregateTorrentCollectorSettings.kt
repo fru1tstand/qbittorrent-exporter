@@ -5,5 +5,8 @@ import me.fru1t.qbtexporter.settings.annotation.Documentation
 /** Settings for individual collectors within the aggregate torrent collector container. */
 data class AggregateTorrentCollectorSettings(
   @Documentation("Special category that aggregates this metric from all torrents loaded in qBt.")
-  var all: Boolean? = false
+  var all: Boolean? = false,
+
+  @Documentation("Special category that aggregates this metric from all torrents per category.")
+  var eachCategory: Boolean? = false
 )
